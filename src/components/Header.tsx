@@ -3,11 +3,13 @@ import Search from './Search'
 import { Bell } from 'lucide-react';
 import { CircleUserRound  } from 'lucide-react';
 import { Globe } from 'lucide-react';
+import Navigation from './Navigation'
 
 
 
 function header() {
   return (
+    <div>
     <div className='flex items-center p-3 text-[14px] justify-bwetween'>
         <div className='flex items-center gap-3 w-full'>
             <div className='text-xl border-primary font-extrabold text-primary cursor-pointer
@@ -27,6 +29,9 @@ function header() {
         </div>
 
     </div>
+    <Navigation></Navigation>
+    </div>
+
   )
 }
 
