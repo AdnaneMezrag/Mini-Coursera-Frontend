@@ -1,18 +1,12 @@
-import React from 'react'
-interface CourseProps {
-  // Define any props you want to pass to the component
-  title:string ;
-  provider:string;
-  imageSrc:string;
-  providerIconSrc:string;
-}
+import type  { CourseProps } from '../types/CourseType'
 
 function course({ title = "Leading People and Teams", provider = "University of California", imageSrc = "/src/assets/images/Course Image.png", providerIconSrc = "/src/assets/images/provider.png" }: CourseProps) {
   return (
     <div className=''>
-    <div className='border-2 border-solid border-[#E0E0E0] rounded-2xl p-[6px] 
+    <div className='border-2 border-solid border-[#E0E0E0] rounded-2xl p-[6px] h-[350px]
     flex flex-col items-center gap-2
-    hover:shadow-lg hover:shadow-secondary transition-all duration-300 ease-in-out hover:scale-105'>
+    hover:shadow-lg hover:shadow-secondary transition-all duration-300 ease-in-out hover:scale-105
+    cursor-pointer'>
         <div className='image w-[100%] h-[150px]'>
             <img src={imageSrc} alt="Course's Image" loading='lazy'
              className='rounded-[10px] h-[100%] w-[100%]'/>
