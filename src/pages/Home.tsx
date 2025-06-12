@@ -9,6 +9,7 @@ function Home() {
             <CoursesSection sectionType = {"NewCourses"}></CoursesSection>
             <CoursesSection sectionType = {"PopularCourses"}></CoursesSection>
             <CoursesSection sectionType = {"DiscoverCourses"}></CoursesSection>
+            <CoursesSection sectionType = {"SearchCourses"}></CoursesSection>
         </main>
 
         <aside className=' mt-10'>

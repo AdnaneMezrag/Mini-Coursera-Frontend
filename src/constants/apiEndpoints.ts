@@ -5,6 +5,7 @@ export const API_ENDPOINTS = {
     NEW: `${host}/api/courses/new`,
     POPULAR: `${host}/api/courses/popular`,
     DISCOVER: `${host}/api/courses/discover`,
+    SEARCH: `${host}/api/courses/search`,
   },
   USERS: `${host}/api/users`,
   // ... other endpoints

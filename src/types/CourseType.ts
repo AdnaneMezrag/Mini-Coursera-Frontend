@@ -1,5 +1,5 @@
 // types/course-types.ts
-export type CourseSectionType = 'NewCourses' | 'PopularCourses' | 'DiscoverCourses';
+export type CourseSectionType = 'NewCourses' | 'PopularCourses' | 'DiscoverCourses' | 'SearchCourses';
 
 export interface CourseProps {
   // Define any props you want to pass to the component
@@ -11,6 +11,7 @@ export interface CourseProps {
 
 export interface CoursesSectionProps {
   sectionType: CourseSectionType;
+  searchTerm?: string; // Optional search term for search section
 }
 
 export type CourseType = {
