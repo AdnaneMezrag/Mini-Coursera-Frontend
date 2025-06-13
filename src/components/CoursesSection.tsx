@@ -19,7 +19,7 @@ switch (sectionType) {
 }
 }
 
-function CoursesSection({sectionType, searchTerm }: CoursesSectionProps) {
+function CoursesSection({sectionType,filters }: CoursesSectionProps) {
       // Get API endpoint based on section type
   const getEndpoint = (): string => {
     switch (sectionType) {
@@ -30,7 +30,9 @@ function CoursesSection({sectionType, searchTerm }: CoursesSectionProps) {
         case 'DiscoverCourses':
         return API_ENDPOINTS.COURSES.DISCOVER;
         case 'SearchCourses':
-        return API_ENDPOINTS.COURSES.SEARCH;
+        return API_ENDPOINTS.COURSES.FILTER;
+        case 'FilterCourses':
+        return API_ENDPOINTS.COURSES.FILTER;
       default:
         return API_ENDPOINTS.COURSES.NEW;
     }
@@ -39,13 +41,20 @@ function CoursesSection({sectionType, searchTerm }: CoursesSectionProps) {
         const sectionHeader = CourseSection(sectionType);
         const [courses, setCourses] = React.useState<CourseType[]>([]);
 
-
-        const config = sectionType === 'SearchCourses'? { params: { searchTerm: searchTerm } }: {};
         useEffect(() => {
-            // courses.length = 0; // Clear previous courses
-            axios.get(endpoint, config )
+          const params = new URLSearchParams();
+        
+          if(filters !== undefined){
+            if (filters.searchTerm) params.append('searchTerm', filters.searchTerm);
+            if (filters.subjectIDs?.length) filters.subjectIDs.forEach(id => params.append('subjectIDs', id.toString()));;
+            if (filters.languageIDs?.length) params.append('languageIDs', filters.languageIDs.join(','));
+            if (filters.levels?.length) params.append('levels', filters.levels.join(','));
+          }
+            console.log(params);
+            axios.get(endpoint, {params} )
                 
                 .then(response => {
+            console.log(response.data);
                     setCourses(response.data);
                 })
                 .catch(error => {
@@ -53,7 +62,7 @@ function CoursesSection({sectionType, searchTerm }: CoursesSectionProps) {
                     setCourses([]);
                     console.error('There was an error fetching the courses!', error.message);
                 })
-        },[searchTerm]);
+        },[filters]);
   return (
 <section className='recently-viewed mt-10'>
   <h3 className='text-3xl font-bold'>{sectionHeader}</h3>

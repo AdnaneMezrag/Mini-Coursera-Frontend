@@ -1,4 +1,3 @@
-import React from 'react'
 import Search from './Search'
 import { Bell } from 'lucide-react';
 import { CircleUserRound  } from 'lucide-react';

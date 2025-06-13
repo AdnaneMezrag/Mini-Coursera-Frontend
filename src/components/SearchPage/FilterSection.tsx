@@ -1,7 +1,18 @@
-import FilterCheckbox from './FilterCheckbox'
 import { useState } from 'react';
 
-function FilterSection({filters = [] ,filterName}: {filters: string[],filterName:string}) {
+function FilterSection({filters = [] ,filterName,selected, setSelected}: {filters: string[],filterName:string
+ selected: number[] ,setSelected: React.Dispatch<React.SetStateAction<number[]>>
+}) {
+
+    const handleCheckboxChange = (value: number) => {
+    if (selected.includes(value)) {
+      setSelected(selected.filter(v => v !== value));
+    } else {
+      setSelected([...selected, value]);
+    }
+  };
+
+
     const [showAll, setShowAll] = useState(false);
     const initialVisibleCount = 4;
     const visibleCategories = showAll 
@@ -14,9 +25,17 @@ function FilterSection({filters = [] ,filterName}: {filters: string[],filterName
     <fieldset className='mb-5'>
         <legend className='text-lg font-semibold mb-4'>{filterName}</legend>
         <div className='flex flex-col gap-2'>
+
             {visibleCategories.map((filter, index) => (
-                <FilterCheckbox key={index} filterName={filter}></FilterCheckbox>
+            <div className='flex items-center gap-2' key={index}>
+              <input type="checkbox" id={"filter-checkbox" + filter} 
+              className='cursor-pointer w-5 h-5 font-medium border-2 border-accent border-solid' 
+              value={index}
+              onChange={() => handleCheckboxChange(index+1)}/>
+              <label htmlFor={"filter-checkbox" + filter} className='text-sm cursor-pointer'>{filter}</label>
+            </div>
             ))}
+
         </div>
 
               {remainingCount > 0 && (
