@@ -1,3 +1,6 @@
+import type { NavigateOptions } from 'react-router-dom';
+import type { URLSearchParamsInit } from 'react-router-dom';
+
 // types/course-types.ts
 export type CourseSectionType = 'NewCourses' | 'PopularCourses' | 'DiscoverCourses' | 'SearchCourses'
 | 'FilterCourses';
@@ -10,7 +13,7 @@ export interface CourseProps {
   providerIconSrc:string;
 }
 
-export type CourseLevel =| "Beginner"| "Intermediate"| "Advanced"| "Mixed";
+export type CourseLevel = "Beginner"| "Intermediate"| "Advanced"| "Mixed";
 
 export interface FilterCoursesDTO {
   searchTerm?: string;
@@ -23,6 +26,8 @@ export interface CoursesSectionProps {
   sectionType: CourseSectionType;
   searchTerm?: string; // Optional search term for search section
   filters?: FilterCoursesDTO;
+searchParams: URLSearchParams;
+setSearchParams: (nextInit: URLSearchParamsInit, navigateOptions?: NavigateOptions) => void;
 }
 
 export type CourseType = {
