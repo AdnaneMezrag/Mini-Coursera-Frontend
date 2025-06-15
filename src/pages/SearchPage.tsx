@@ -6,7 +6,7 @@ export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (
-    <div className='sm:grid sm:grid-cols-[1fr_4fr] gap-10'>
+    <div className='container sm:grid sm:grid-cols-[1fr_4fr] gap-10'>
       <aside className='h-[300px] overflow-y-scroll'>
         <form>
           <FilterSection

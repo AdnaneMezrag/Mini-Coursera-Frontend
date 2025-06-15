@@ -1,8 +1,11 @@
 import type  { CourseProps } from '../types/CourseType'
+import { Link } from 'react-router-dom';
 
-function course({ title = "Leading People and Teams", provider = "University of California", imageSrc = "/src/assets/images/Course Image.png", providerIconSrc = "/src/assets/images/provider.png" }: CourseProps) {
+function course({id, title = "Leading People and Teams", provider = "University of California", imageSrc = "/src/assets/images/Course Image.png", providerIconSrc = "/src/assets/images/provider.png" }: CourseProps) {
+
   return (
     <div className=''>
+    <Link to={`/course/${id}`}>
     <div className='border-2 border-solid border-[#E0E0E0] rounded-2xl p-[6px] h-[350px]
     flex flex-col items-center gap-2
     hover:shadow-lg hover:shadow-secondary transition-all duration-300 ease-in-out hover:scale-105
@@ -19,6 +22,7 @@ function course({ title = "Leading People and Teams", provider = "University of 
             <h3 className='title font-bold text-[14px] pb-24 '>{title}</h3>
         </div>
     </div>
+    </Link>
     </div>
 
   )

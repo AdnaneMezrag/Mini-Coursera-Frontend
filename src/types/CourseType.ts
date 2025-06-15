@@ -7,6 +7,7 @@ export type CourseSectionType = 'NewCourses' | 'PopularCourses' | 'DiscoverCours
 
 export interface CourseProps {
   // Define any props you want to pass to the component
+  id: number;
   title:string ;
   provider:string;
   imageSrc:string;

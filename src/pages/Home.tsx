@@ -4,7 +4,7 @@ import CoursesSection from '../components/CoursesSection'
 
 function Home() {
   return (
-    <div>
+    <div className='container'>
         <main>
             <CoursesSection sectionType = {"NewCourses"}></CoursesSection>
             <CoursesSection sectionType = {"PopularCourses"}></CoursesSection>

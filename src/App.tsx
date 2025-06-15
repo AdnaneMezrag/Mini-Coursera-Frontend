@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Footer from './components/Footer'
 import SearchPage from './pages/SearchPage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import CoursePage from './components/CoursePage';
 
 function App() {
 
@@ -16,11 +17,13 @@ function App() {
         </div>
       </header>
 
-      <main className='mt-5 border-b-1 border-secondary pb-10'>
-        <div className='container rounded-lg p-4 mt-4'>
+      <main className='mt-5 border-b-1 border-secondary pb-10 '>
+        <div className='rounded-lg mt-4'>
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/search' element={<SearchPage />} />
+              <Route path='/course/:id' element={<CoursePage/>} />
+
             </Routes>
         </div>
       </main>
