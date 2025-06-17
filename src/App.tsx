@@ -1,9 +1,10 @@
 import Header from './components/Header'
-import Home from './pages/Home'
+import Home from './pages/HomePage'
 import Footer from './components/Footer'
 import SearchPage from './pages/SearchPage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CoursePage from './components/CoursePage';
+import SignLoginPage from './pages/SignLoginPage';
 
 function App() {
 
@@ -23,7 +24,7 @@ function App() {
               <Route path='/' element={<Home />} />
               <Route path='/search' element={<SearchPage />} />
               <Route path='/course/:id' element={<CoursePage/>} />
-
+              {/* <Route path='/signuplogin' element={<SignLoginPage></SignLoginPage>}></Route> */}
             </Routes>
         </div>
       </main>
