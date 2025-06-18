@@ -12,3 +12,12 @@ export interface UserCreateDTO {
   password: string;
   photo?: File | null; 
 }
+
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userType: UserTypeEnum;
+  photo?: string | null; // URL to the user's photo
+}

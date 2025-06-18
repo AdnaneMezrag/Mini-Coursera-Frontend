@@ -3,8 +3,9 @@ import Home from './pages/HomePage'
 import Footer from './components/Footer'
 import SearchPage from './pages/SearchPage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CoursePage from './components/CoursePage';
+import CoursePage from './pages/CoursePage';
 import SignLoginPage from './pages/SignLoginPage';
+import CourseContentPage from './pages/CourseContentPage';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
               <Route path='/search' element={<SearchPage />} />
               <Route path='/course/:id' element={<CoursePage/>} />
               {/* <Route path='/signuplogin' element={<SignLoginPage></SignLoginPage>}></Route> */}
+              <Route path='/course/:id/content' element={<CourseContentPage/>}/>
             </Routes>
         </div>
       </main>

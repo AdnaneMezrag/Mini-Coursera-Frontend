@@ -2,19 +2,29 @@ import apiClient from './apiClient';
 import type { UserCreateDTO } from '../types/UserType';
 
 export const UserService = {
-  async create(userData: UserCreateDTO): Promise<void> {
+  async create(userData: UserCreateDTO): Promise<any> {
     const formData = new FormData();
 
-
-    formData.append('FirstName', userData.firstName);
-    formData.append('LastName', userData.lastName);
-    formData.append('Email', userData.email);
-    formData.append('Password', userData.password);
-    formData.append('UserType', userData.userType.toString());
+    formData.append('userCreateDTO.FirstName', userData.firstName);
+    formData.append('userCreateDTO.LastName', userData.lastName);
+    formData.append('userCreateDTO.Email', userData.email);
+    formData.append('userCreateDTO.Password', userData.password);
+    formData.append('userCreateDTO.UserType', userData.userType.toString());
 
     if (userData.photo instanceof File) {
-      formData.append('image', userData.photo);
+      formData.append('userCreateDTO.image', userData.photo);
     }
     await apiClient.post('/user', formData);
-  }
+  },
+
+  async getByEmailAndPassword(email: string, password: string): Promise<any> {
+    const response = await apiClient.get('/user/login', {
+      params: {
+        email,
+        password
+      }
+    });
+    return response.data;
+  },
 };
+

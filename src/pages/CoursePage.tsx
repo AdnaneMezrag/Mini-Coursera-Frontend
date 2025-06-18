@@ -1,21 +1,44 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import FAQs from './FAQs';
-import Modules from './Modules';
+import { useNavigate, useParams } from 'react-router-dom';
+import FAQs from '../components/FAQs';
+import Modules from '../components/Modules';
 import { useFetchCourseById } from '../hooks/useFetchCourseById';
-import SignupLoginPage from '../pages/SignLoginPage';
+import SignupLoginPage from './SignLoginPage';
+import { useContext } from 'react';
+import { UserContext } from '../contexts/userContext';
+import { EnrollmentService } from '../api/enrollmentService';
 
 export default function CoursePage() {
   const { id } = useParams();
   const { course, isLoading, error } = useFetchCourseById(id);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const { user } = useContext(UserContext);
+    const navigate = useNavigate();
 
   if (isLoading) return <div className="container py-10">Loading...</div>;
   if (error) return <div className="container py-10 text-red-500">{error}</div>;
   if (!course) return null;
 
+  const EnrollStudent = () =>{
+    const studentID = user?.id || 0;
+    const courseID = course.id;
+    console.log('Enrolling student:', studentID, 'in course:', courseID);
+    EnrollmentService.enrollStudent(courseID,studentID)
+      .then(() => {
+        console.log('Enrollment successful');
+        navigate(`/course/${encodeURIComponent(courseID)}/content`);
+      })
+      .catch((err) => {
+        console.error('Enrollment failed:', err);
+      });
+  } 
+
   const handleEnroll = () => {
-    setShowSignupModal(true);
+    if(!user){
+      setShowSignupModal(true);
+    }else{
+      EnrollStudent();
+    }
   };
 
   const handleCloseModal = () => {

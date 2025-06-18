@@ -1,6 +1,10 @@
-import { useState, useRef, ChangeEvent } from 'react';
+import { useState, useRef } from 'react';
+import type { ChangeEvent } from 'react';
 import {UserService} from '../api/userService';
 import { UserTypeEnum } from '../types/UserType';
+import { useContext } from 'react';
+import { UserContext } from '../contexts/userContext';
+
 
 interface FormData {
   email: string;
@@ -10,9 +14,9 @@ interface FormData {
   userType: UserTypeEnum; // 1 = Student, 2 = Instructor
 }
 
-
 export default function SignupLoginPage({ onClose }: { onClose: () => void }) {
 
+  const { setUser } = useContext(UserContext);
   
   const handleSignup = () => {
     const firstNameData = formData.fullName.split(' ')[0];
@@ -34,7 +38,22 @@ export default function SignupLoginPage({ onClose }: { onClose: () => void }) {
   })
 }
 
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+const handleLogin = () => {
+  UserService.getByEmailAndPassword(formData.email, formData.password)
+    .then(response => {
+      if (response) {
+        console.log('Login successful');
+        setUser(response); // Assuming response contains user data
+        onClose(); // Close the modal or redirect
+      }
+    })
+    .catch(error => {
+      // Handle login error
+      console.error('Login failed:', error);
+    });}
+
+
+const [isLogin, setIsLogin] = useState<boolean>(true);
 const [formData, setFormData] = useState<FormData>({
   email: '',
   password: '',
@@ -75,9 +94,10 @@ const [formData, setFormData] = useState<FormData>({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(isLogin ? 'Logging in' : 'Signing up', formData);
     if(!isLogin){
       handleSignup();
+    }else{
+      handleLogin();
     }
     // Handle form submission
   };
