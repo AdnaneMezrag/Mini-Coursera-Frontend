@@ -1,4 +1,4 @@
-import CourseContentMenu from '../components/CourseContentMenu'
+import CourseContentMenu from '../components/Course/CourseContentMenu'
 import { CourseService } from '../api/courseService';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';

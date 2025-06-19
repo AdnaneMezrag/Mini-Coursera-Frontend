@@ -1,5 +1,5 @@
-import CategoryItem from '../components/CategoryItem'
-import CoursesSection from '../components/CoursesSection'
+import CategoryItem from '../components/Utilities/CategoryItem'
+import CoursesSection from '../components/Course/CoursesSection'
 
 
 function Home() {

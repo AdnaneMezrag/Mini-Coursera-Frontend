@@ -1,5 +1,5 @@
 import FilterSection from '../components/SearchPage/FilterSection';
-import CoursesSection from '../components/CoursesSection';
+import CoursesSection from '../components/Course/CoursesSection';
 import { useSearchParams } from 'react-router-dom';
 
 export default function SearchPage() {

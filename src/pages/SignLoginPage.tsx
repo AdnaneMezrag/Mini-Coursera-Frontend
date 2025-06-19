@@ -5,7 +5,6 @@ import { UserTypeEnum } from '../types/UserType';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext';
 
-
 interface FormData {
   email: string;
   password: string;
@@ -17,7 +16,6 @@ interface FormData {
 export default function SignupLoginPage({ onClose }: { onClose: () => void }) {
 
   const { setUser } = useContext(UserContext);
-  
   const handleSignup = () => {
     const firstNameData = formData.fullName.split(' ')[0];
     const lastNameData = formData.fullName.split(' ').slice(1).join(' ') || '';

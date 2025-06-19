@@ -1,8 +1,8 @@
-import Search from './Search'
+import Search from '../Utilities/Search';
 import { Bell } from 'lucide-react';
 import { CircleUserRound  } from 'lucide-react';
 import { Globe } from 'lucide-react';
-import Navigation from './Navigation'
+import Navigation from './Navigation';
 import {Link} from 'react-router-dom'
 
 

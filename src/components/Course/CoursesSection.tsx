@@ -1,5 +1,5 @@
 import Course from './Course';
-import { useCourses } from '../hooks/useCourses';
+import { useCourses } from '../../hooks/useCourses';
 
 function CourseSection(sectionType: string) {
   switch (sectionType) {

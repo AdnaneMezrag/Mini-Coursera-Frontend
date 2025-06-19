@@ -1,4 +1,4 @@
-import type  { CourseProps } from '../types/CourseType'
+import type  { CourseProps } from '../../types/CourseType'
 import { Link } from 'react-router-dom';
 
 function course({id, title = "Leading People and Teams", provider = "University of California", imageSrc = "/src/assets/images/Course Image.png", providerIconSrc = "/src/assets/images/provider.png" }: CourseProps) {

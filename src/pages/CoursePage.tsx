@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import FAQs from '../components/FAQs';
-import Modules from '../components/Modules';
+import FAQs from '../components/Utilities/FAQs';
+import Modules from '../components/CourseModule/Modules';
 import { useFetchCourseById } from '../hooks/useFetchCourseById';
 import SignupLoginPage from './SignLoginPage';
 import { useContext } from 'react';
@@ -13,7 +13,7 @@ export default function CoursePage() {
   const { course, isLoading, error } = useFetchCourseById(id);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const { user } = useContext(UserContext);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   if (isLoading) return <div className="container py-10">Loading...</div>;
   if (error) return <div className="container py-10 text-red-500">{error}</div>;
@@ -22,6 +22,10 @@ export default function CoursePage() {
   const EnrollStudent = () =>{
     const studentID = user?.id || 0;
     const courseID = course.id;
+    if(user){
+      navigate(`/course/${encodeURIComponent(courseID)}/content`);
+      return;
+    }
     console.log('Enrolling student:', studentID, 'in course:', courseID);
     EnrollmentService.enrollStudent(courseID,studentID)
       .then(() => {
