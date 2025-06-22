@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import FAQs from '../components/Utilities/FAQs';
 import Modules from '../components/CourseModule/Modules';
@@ -19,6 +19,8 @@ export default function CoursePage() {
   if (error) return <div className="container py-10 text-red-500">{error}</div>;
   if (!course) return null;
 
+
+
   const EnrollStudent = () =>{
     const studentID = user?.id || 0;
     const courseID = course.id;
@@ -26,10 +28,8 @@ export default function CoursePage() {
       navigate(`/course/${encodeURIComponent(courseID)}/content`);
       return;
     }
-    console.log('Enrolling student:', studentID, 'in course:', courseID);
     EnrollmentService.enrollStudent(courseID,studentID)
       .then(() => {
-        console.log('Enrollment successful');
         navigate(`/course/${encodeURIComponent(courseID)}/content`);
       })
       .catch((err) => {
@@ -49,7 +49,11 @@ export default function CoursePage() {
     setShowSignupModal(false);
   };
 
+
+ 
+
   return (
+
     <div className={`relative ${showSignupModal ? 'opacity-70' : 'opacity-100'}`}>
       {/* Modal Overlay */}
       {showSignupModal && (

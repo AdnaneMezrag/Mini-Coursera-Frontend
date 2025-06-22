@@ -1,5 +1,4 @@
-// CourseContentMenu.tsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ModuleContent {
   id: number;
@@ -16,22 +15,41 @@ interface CourseModule {
 
 interface CourseContentMenuProps {
   CourseModules: CourseModule[];
-  setModuleContent: React.Dispatch<React.SetStateAction<{ content: string; videoUrl: string;name: string }>>;
+  completedModuleContents: number[];
+  setModuleContent: React.Dispatch<React.SetStateAction<{ content: string; videoUrl: string; name: string ;id:number}>>;
 }
 
-export default function CourseContentMenu({ CourseModules,setModuleContent}: CourseContentMenuProps) {
-
+export default function CourseContentMenu({
+  CourseModules,
+  completedModuleContents,
+  setModuleContent
+}: CourseContentMenuProps) {
   const [expandedCourseModules, setExpandedCourseModules] = useState<number[]>([]);
-  const [activeModuleContentID, setActiveModuleContentID] = useState<number>(101);
+  const [activeModuleContentID, setActiveModuleContentID] = useState<number>();
+
+  useEffect(() => {
+    const moduleContents = CourseModules.flatMap(courseModule => courseModule.moduleContents);
+    const oldCompletedModuleContentId = completedModuleContents[completedModuleContents.length -1];
+    if(oldCompletedModuleContentId===undefined || oldCompletedModuleContentId == -1) return; 
+        
+    const currentIndex = moduleContents.findIndex(content => content.id === oldCompletedModuleContentId);
+    const newContentModule = currentIndex >= 0 && currentIndex + 1 < moduleContents.length
+      ? moduleContents[currentIndex + 1]
+      : undefined;
+    if(newContentModule === undefined) return;
+    onModuleContentClickHandler(newContentModule);
+  },[completedModuleContents])
+  
 
   const onModuleContentClickHandler = (moduleContent: ModuleContent) => {
     setActiveModuleContentID(moduleContent.id);
     setModuleContent({
       content: moduleContent.content,
       videoUrl: moduleContent.videoUrl,
-      name: moduleContent.name
+      name: moduleContent.name,
+      id: moduleContent.id
     });
-  }
+  };
 
   const toggleCourseModule = (id: number) => {
     setExpandedCourseModules(prev =>
@@ -55,17 +73,34 @@ export default function CourseContentMenu({ CourseModules,setModuleContent}: Cou
 
             {expandedCourseModules.includes(CourseModule.id) && (
               <ul className="mt-2 pl-4 border-l border-gray-300 space-y-1">
-                {CourseModule.moduleContents.map(ModuleContent => (
-                  <li
-                    key={ModuleContent.id}
-                    className={`cursor-pointer p-2 rounded ${
-                      ModuleContent.id === activeModuleContentID ? 'bg-primary/10 text-primary' : 'hover:bg-gray-100'
-                    }`}
-                    onClick={() => onModuleContentClickHandler(ModuleContent)}
-                  >
-                    {ModuleContent.name}
-                  </li>
-                ))}
+                {CourseModule.moduleContents.map(ModuleContent => {
+                  const isCompleted = completedModuleContents.includes(ModuleContent.id);
+                  return (
+                    <li
+                      key={ModuleContent.id}
+                      className={`cursor-pointer p-2 rounded flex items-center gap-2 ${
+                        ModuleContent.id === activeModuleContentID
+                          ? 'bg-primary/10 text-primary'
+                          : 'hover:bg-gray-100'
+                      }`}
+                      onClick={() => onModuleContentClickHandler(ModuleContent)}
+                    >
+                      {/* Circle icon */}
+                      <span
+                        className={`w-4 h-4 flex items-center justify-center rounded-full border ${
+                          isCompleted
+                            ? 'bg-green-500 border-green-500 text-white text-[10px]'
+                            : 'border-gray-400'
+                        }`}
+                      >
+                        {isCompleted && '✓'}
+                      </span>
+
+                      {/* Content name */}
+                      <span className="truncate">{ModuleContent.name}</span>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </li>
