@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import FAQs from '../components/Utilities/FAQs';
 import Modules from '../components/CourseModule/Modules';
@@ -54,7 +54,7 @@ export default function CoursePage() {
 
   return (
 
-    <div className={`relative ${showSignupModal ? 'opacity-70' : 'opacity-100'}`}>
+    <div className={``}>
       {/* Modal Overlay */}
       {showSignupModal && (
         <div 
@@ -62,7 +62,7 @@ export default function CoursePage() {
           onClick={handleCloseModal}
         >
           <div 
-            className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6 relative"
+            className="h-[80vh] overflow-y-auto bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6 relative"
             onClick={(e) => e.stopPropagation()}
           >
             <SignupLoginPage onClose={handleCloseModal} />

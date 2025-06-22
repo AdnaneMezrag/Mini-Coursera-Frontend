@@ -19,5 +19,5 @@ export interface User {
   lastName: string;
   email: string;
   userType: UserTypeEnum;
-  photo?: string | null; // URL to the user's photo
+  photoUrl?: string | null; // URL to the user's photo
 }

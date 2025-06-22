@@ -101,7 +101,7 @@ const [formData, setFormData] = useState<FormData>({
   };
 
   return (
-    <div className="relative">
+    <div className="">
       <button 
         onClick={onClose}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
@@ -150,9 +150,6 @@ const [formData, setFormData] = useState<FormData>({
       <form onSubmit={handleSubmit} className="space-y-4">
         {!isLogin && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
-            </label>
             <input
               type="text"
               name="fullName"
@@ -163,7 +160,7 @@ const [formData, setFormData] = useState<FormData>({
               required={!isLogin}
             />
             <div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">
+  <label className="ml-1 block text-sm font-medium text-gray-700 my-2">
     I am a:
   </label>
   <div className="flex items-center space-x-6">
@@ -196,24 +193,18 @@ const [formData, setFormData] = useState<FormData>({
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-            placeholder="name@example.com"
+            placeholder="Enter your email (name@example.com)"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
           <input
             type="password"
             name="password"
