@@ -1,11 +1,11 @@
-import CourseContentMenu from '../components/Course/CourseContentMenu'
-import { CourseService } from '../api/courseService';
+import CourseContentMenu from '../../components/Course/CourseContentMenu'
+import { CourseService } from '../../api/courseService';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import SafeHTML from '../components/Utilities/SafeHTML';
-import { EnrollmentService } from '../api/enrollmentService';
+import SafeHTML from '../../components/Utilities/SafeHTML';
+import { EnrollmentService } from '../../api/enrollmentService';
 import { useContext } from 'react';
-import { UserContext } from '../contexts/userContext';
+import { UserContext } from '../../contexts/userContext';
 
 
 function CourseContentPage() {

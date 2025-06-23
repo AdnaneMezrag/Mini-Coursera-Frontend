@@ -9,7 +9,10 @@ function Navigation() {
 
         <div>
           <Link to="my-learning" className='hover:text-primary'>My Learning</Link>
-            
+        </div>
+
+        <div>
+          <Link to="courses/new" className='hover:text-primary'>Create Course</Link>
         </div>
     </nav>
   )

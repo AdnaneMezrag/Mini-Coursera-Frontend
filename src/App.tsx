@@ -3,9 +3,10 @@ import Home from './pages/HomePage'
 import Footer from './components/Layout/Footer'
 import SearchPage from './pages/SearchPage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CoursePage from './pages/CoursePage';
-import CourseContentPage from './pages/CourseContentPage';
+import CoursePage from './pages/Course/CoursePage';
+import CourseContentPage from './pages/Course/CourseContentPage';
 import MyLearningPage from './pages/MyLearningPage';
+import CourseFormPage from './pages/Course/CourseFormPage';
 
 function App() {
 
@@ -27,6 +28,8 @@ function App() {
               <Route path='/course/:id' element={<CoursePage/>} />
               <Route path='/course/:id/content' element={<CourseContentPage/>}/>
               <Route path='/my-learning/' element= {<MyLearningPage/>}></Route>
+              <Route path='/courses/new' element= {<CourseFormPage mode='create'/>}></Route>
+              <Route path='/courses/:courseId/edit' element={<CourseFormPage mode='update'/>}></Route>
             </Routes>
         </div>
       </main>

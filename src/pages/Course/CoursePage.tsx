@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import FAQs from '../components/Utilities/FAQs';
-import Modules from '../components/CourseModule/Modules';
-import { useFetchCourseById } from '../hooks/useFetchCourseById';
-import SignupLoginPage from './SignLoginPage';
+import FAQs from '../../components/Utilities/FAQs';
+import Modules from '../../components/CourseModule/Modules';
+import { useFetchCourseById } from '../../hooks/useFetchCourseById';
+import SignupLoginPage from '.././SignLoginPage';
 import { useContext } from 'react';
-import { UserContext } from '../contexts/userContext';
-import { EnrollmentService } from '../api/enrollmentService';
+import { UserContext } from '../../contexts/userContext';
+import { EnrollmentService } from '../../api/enrollmentService';
 
 export default function CoursePage() {
   const { id } = useParams();

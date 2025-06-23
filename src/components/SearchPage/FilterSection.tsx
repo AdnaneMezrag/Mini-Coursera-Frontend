@@ -27,6 +27,7 @@ function FilterSection({
   const selectedValues = searchParams.getAll(paramKey);
 
   const handleCheckboxChange = (value: string) => {
+    console.log(`Check box changed ${value}`);
     const newParams = new URLSearchParams(searchParams);
     const currentValues = searchParams.getAll(paramKey);
     const isSelected = currentValues.includes(value);

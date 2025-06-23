@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useContext } from 'react';
 import Search from '../Utilities/Search';
 import { Bell, CircleUserRound, Globe } from 'lucide-react';
 import Navigation from './Navigation';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '@/contexts/userContext';
 import SignupLoginPage from '../../pages/SignLoginPage';
 
@@ -13,6 +13,7 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignIn = () =>{
     setShowSignupModal(true);
@@ -38,6 +39,7 @@ function Header() {
   const handleLogout = () => {
     // Add your logout logic here
     console.log("Logging out...");
+    navigate("/");
     setUser(null);
   };
 
@@ -49,7 +51,7 @@ function Header() {
                 onClick={handleCloseModal}
               >
                 <div 
-                  className="h-[80vh] overflow-y-auto bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6 relative"
+                  className="h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6 relative"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <SignupLoginPage onClose={handleCloseModal} />
