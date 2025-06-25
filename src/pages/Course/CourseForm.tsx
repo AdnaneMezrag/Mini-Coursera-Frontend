@@ -139,6 +139,7 @@ export default function CourseForm() {
             value={formData.price}
             onChange={handleChange}
             placeholder="Enter price"
+            required
             className="w-full border border-gray-300 px-3 py-2 rounded-md"
           />
         </div>

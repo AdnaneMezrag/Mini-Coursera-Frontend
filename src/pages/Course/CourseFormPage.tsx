@@ -1,16 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CourseForm from './CourseForm';
-type Mode = 'create' | 'update';
-
+import CourseModuleFrom from '@/components/CourseModule/CourseModuleFrom';
+import type { CourseModule,ModuleContent } from '@/types/CourseModule';
+import {Plus} from 'lucide-react'
+import type { Mode } from '../../types/Util'; 
+import { helpers } from '@/Utilities/helpers';
 
 interface CourseFormPageProps{
   mode: Mode;
 }
 
+
+
 function CreateUpdateCourse({mode} : CourseFormPageProps) {
+
+  const handleAddModule = () =>{
+    const courseModule1:CourseModule = {tempId:helpers.generateUUID()};
+    setCourseModules(prev => [...prev,courseModule1]);
+  }
+
+  const [courseModules,setCourseModules] = useState<CourseModule[]>([]);
   return (
     <div className='container'>
-      <CourseForm></CourseForm>
+      {/* <CourseForm></CourseForm> */}
+      <div className='container max-w-5xl'>
+        {courseModules && courseModules.map((courseModule,index) => {
+          courseModule.moduleNumber = index +1;
+         return(
+          <CourseModuleFrom key={courseModule.id || courseModule.tempId} courseModule={courseModule}
+          setCourseModules={setCourseModules} courseModules={courseModules}></CourseModuleFrom>
+        )})}
+        
+        <button type="button"
+          className="mt-2 w-[150px] cursor-pointer border-1 border-solid border-[#bcbdbe] bg-white flex items-center gap-2 px-4 py-2 rounded-[4px] text-primary text-sm font-medium hover:bg-hover transition"
+          onClick={handleAddModule}
+          >
+          <Plus className="w-4 h-4" />Add Module
+        </button>
+        
+      </div>
+
     </div>
   )
 }

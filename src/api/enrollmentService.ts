@@ -52,7 +52,6 @@ export const EnrollmentService = {
   try {
     await apiClient.post("enrollmentprogress", data); // Sends JSON body
 
-    console.log("Enrollment progress created.");
   } catch (error) {
     console.error("Error creating enrollment progress:", error);
     throw error;

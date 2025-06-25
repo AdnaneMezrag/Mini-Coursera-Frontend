@@ -22,6 +22,8 @@ function CourseContentPage() {
 
   const handleMarkCourse = (moduleContentId:number) => {
     if(!user.user || enrollment.id === undefined){
+          console.log(enrollment);
+
       return;
     }
     if(completedModuleContents.includes(moduleContentId)) return;
