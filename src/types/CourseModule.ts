@@ -15,4 +15,6 @@ export type ModuleContent = {
     name: string;
     content: string | null;
     video: File | null;   
+    courseModuleId: number | null;
+    videoUrl: string | null;
 }

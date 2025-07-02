@@ -18,7 +18,7 @@ courseModules: CourseModule[];
 function CourseModuleFrom({courseModule,setCourseModules,courseModules}:CourseModuleFormProps) {
 
     const [moduleEdit,setModuleEdit] = useState<boolean>(false);
-    const courseId = 1047;
+    const courseId = 1;
     const [ moduleName,setModuleName] = useState<string>('');
     const [ moduleDescription,setModuleDescription] = useState<string>(courseModule.description);
     const [courseModuleState,setCourseModuleState] = useState<CourseModule>(courseModule);
@@ -130,7 +130,7 @@ function CourseModuleFrom({courseModule,setCourseModules,courseModules}:CourseMo
 
         {/* Module Content */}
         <div className='ml-10 mt-4'>
-            <ModuleContentForm></ModuleContentForm>
+            <ModuleContentForm courseModuleId={courseModuleState.id}></ModuleContentForm>
 
             <button type="button"
                     className="cursor-pointer border-1 border-solid border-[#bcbdbe] bg-white flex items-center gap-2 px-4 py-2 rounded-[4px] text-primary text-sm font-medium hover:bg-hover transition"

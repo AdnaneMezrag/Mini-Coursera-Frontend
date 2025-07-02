@@ -1,91 +1,202 @@
-import React from 'react'
-import { useState } from 'react';
-import { Edit, Trash2,FileType,CircleCheck  } from "lucide-react";
+import { useEffect, useState, useRef } from 'react';
+import { Edit, Trash2, FileType, CircleCheck, Video, X } from "lucide-react";
 import RichTextEditor from '../Utilities/RichTxtEditor';
-import { Video } from "lucide-react";
-import SafeHTML from '../Utilities/SafeHTML';
+import type { ModuleContent } from '@/types/CourseModule';
+import { ModuleContentService } from '@/api/moduleContentService';
+import { BeatLoader } from "react-spinners";
+import type { Mode } from '@/types/Util';
+import ConfirmDialog from "@/components/Utilities/ConfirmDialog"
 
-export default function ModuleContentForm() {
+interface ModuleContentFormProps {
+  courseModuleId: number | null;
+}
 
-    const [ContentEdit,setContentEdit] = useState<boolean>(false);
-    const [description, setDescription] = useState("<p></p>");
+export default function ModuleContentForm({ courseModuleId }: ModuleContentFormProps) {
+  const [ContentEdit, setContentEdit] = useState<boolean>(false);
+  const [form, setForm] = useState<ModuleContent>({ name: "", content: "<p></p>" });
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [selectedVideoName, setSelectedVideoName] = useState<string | null>(null);
+  const [deleteVideo, setDeleteVideo] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
-    const handleContentModuleEdit = () =>{
-        setContentEdit(true);
+  let mode: Mode = form.id ? 'update' : 'create';
+
+  useEffect(() => {
+    setForm((prev) => ({ ...prev, courseModuleId }));
+  }, [courseModuleId]);
+
+  const handleContentModuleEdit = () => setContentEdit(true);
+
+  const updateModuleContent = async () => {
+    try {
+      await ModuleContentService.updateModuleContent(form, deleteVideo);
+    } catch {
+      setMessage("Failed to update lecture");
+    }
+  };
+
+  const createModuleContent = async () => {
+    try {
+      const moduleContentId = await ModuleContentService.createModuleContent(form);
+      setForm((prev) => ({ ...prev, id: moduleContentId }));
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveModule = async (e) => {
+    e.preventDefault();
+    if (courseModuleId === undefined) {
+      setMessage("You can't save the lecture because you haven't added a course module.");
+      return;
     }
 
-    const handleSaveModule = () => {
-        handleModuleCancel();
+    setMessage("");
+    setIsSaving(true);
+
+    if (mode === 'update') await updateModuleContent();
+    else await createModuleContent();
+
+    setIsSaving(false);
+    setDeleteVideo(false);
+  };
+
+  const handleModuleCancel = () => {
+    setContentEdit(false);
+    setDeleteVideo(false);
+  };
+
+  const handleVideoRemove = () => {
+    setForm((prev) => ({ ...prev, video: null }));
+    setSelectedVideoName(null);
+    setDeleteVideo(true);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setForm((prev) => ({ ...prev, video: file }));
+      setSelectedVideoName(file.name);
+      setDeleteVideo(true);
     }
-    
-    const handleModuleCancel = () =>{
-        setContentEdit(false);
+  };
+
+  const handleDeleteModule = async () => {
+    try {
+      setIsSaving(true);
+      await ModuleContentService.deleteModuleContent(form.id);
+      setForm({ name: "", content: "<p></p>" });
+      setContentEdit(false);
+      setSelectedVideoName(null);
+      setDeleteVideo(false);
+    } catch (error) {
+      setMessage("Error deleting module content.");
+    } finally {
+      setIsSaving(false);
     }
+  };
 
   return (
     <div className='my-2'>
-        {!ContentEdit && (
-            <div className='mt-4 p-2 border-[#b6b0ff] border-solid border-[1px] bg-white flex flex-wrap gap-2 items-center'>
-                <div className='flex flex-wrap gap-2 items-center'>
-                    <CircleCheck className='w-4 h-4'></CircleCheck>
-                    <p className='font-semibold'>Lecture 1:</p>
-                    <FileType className='h-4 w-4'/>
-                    <h4>Introduction</h4>
-                    <button className="text-blue-600 hover:text-blue-800 cursor-pointer" onClick={handleContentModuleEdit}>
-                        <Edit className="w-4 h-4" />
-                    </button>
+        <>
+        <ConfirmDialog
+            open={showConfirmDelete}
+            message="Are you sure you want to delete this lecture?"
+            onConfirm={() => {
+            handleDeleteModule();
+            setShowConfirmDelete(false);
+            }}
+            onCancel={() => setShowConfirmDelete(false)}
+        />
+        </>
 
-                    <button className="text-red-600 hover:text-red-800 cursor-pointer">
-                        <Trash2 className="w-4 h-4" />
-                    </button>
-                </div>
+      {isSaving && <BeatLoader color="#3498db" size={35} />}
+      {message && <p className='text-red-600 font-bold my-2'>{message}</p>}
+
+      {!ContentEdit && (
+        <div className='mt-4 p-2 border-[#b6b0ff] border-solid border-[1px] bg-white flex flex-wrap gap-2 items-center'>
+          <div className='flex flex-wrap gap-2 items-center'>
+            <CircleCheck className='w-4 h-4' />
+            <p className='font-semibold'>Lecture 1:</p>
+            <FileType className='h-4 w-4' />
+            <h4>{form.name || "Untitled Lecture"}</h4>
+            <button className="text-blue-600 hover:text-blue-800 cursor-pointer" onClick={handleContentModuleEdit}>
+              <Edit className="w-4 h-4" />
+            </button>
+              <button className="text-red-600 hover:text-red-800 cursor-pointer" onClick={() => setShowConfirmDelete(true)}>
+                <Trash2 className="w-4 h-4" />
+              </button>
+          </div>
+        </div>
+      )}
+
+      {ContentEdit && (
+        <div className='p-2 border-[#b6b0ff] border-solid border-[1px] bg-white'>
+          <form onSubmit={handleSaveModule}>
+            <input
+              type="text"
+              className='w-full p-1 border-[#b6b0ff] border-solid border-[1px] rounded-[5px]'
+              placeholder='Enter lecture title here'
+              value={form.name}
+              onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+            />
+
+            <div className="my-2">
+              <label className="block text-gray-700 font-medium">Lecture Content</label>
+              <RichTextEditor
+                value={form.content || ""}
+                onChange={(e) => setForm((prev) => ({ ...prev, content: e }))}
+              />
             </div>
-        )}
 
-        {ContentEdit && (
-            <div className='p-2 border-[#b6b0ff] border-solid border-[1px] bg-white'>
-                <div>
-                    <input type="text"
-                    className='w-full p-1 border-[#b6b0ff] border-solid border-[1px] rounded-[5px]' 
-                    placeholder='Enter lecutre title here'/>
+            <div className="flex items-center gap-2 flex-wrap">
+              <label
+                htmlFor="videoUpload"
+                className="flex items-center gap-2 px-4 py-2 cursor-pointer bg-blue-400 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition"
+              >
+                <Video className="w-4 h-4" />
+                Upload Video
+              </label>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="video/*"
+                id="videoUpload"
+                className="hidden"
+                onChange={handleVideoSelect}
+              />
 
-                    <div className="my-2">
-                        <label className="block text-gray-700 font-medium">Lecture Content</label>
-                        <RichTextEditor value={description} onChange={setDescription} />
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <label
-                            htmlFor="videoUpload"
-                            className="flex items-center gap-2 px-4 py-2 cursor-pointer bg-blue-400 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition"
-                        >
-                            <Video className="w-4 h-4" />
-                            Upload Video
-                        </label>
-                        <input
-                            type="file"
-                            accept="video/*"
-                            id="videoUpload"
-                            className="hidden"
-                        />
-                    </div>
-
-                    <div className='flex justify-end gap-4'>
-                        <button className='font-semibold cursor-pointer hover:text-[#616060]'
-                        onClick={handleModuleCancel}>Cancel</button>
-                        <button type="submit"
-                            className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition
-                            cursor-pointer"
-                        onClick={handleSaveModule}
-                        >Save Lecture</button>
-                    </div>
-
-
+              {selectedVideoName || form.videoUrl ? (
+                <div className="flex items-center gap-1 text-green-700 font-medium bg-green-100 px-2 py-1 rounded-md">
+                  🎬 {selectedVideoName || "Current Video"}
+                  <button type="button" onClick={handleVideoRemove}>
+                    <X className="w-4 h-4 text-red-600 hover:text-red-800" />
+                  </button>
                 </div>
+              ) : null}
             </div>
-        )}
 
-
+            <div className='flex justify-end gap-4 mt-4'>
+              <button
+                className='font-semibold cursor-pointer hover:text-[#616060]'
+                onClick={handleModuleCancel}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition cursor-pointer"
+              >
+                Save Lecture
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
-  )
+  );
 }
