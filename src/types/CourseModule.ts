@@ -12,9 +12,11 @@ export type CourseModule = {
 
 export type ModuleContent = {
     id: number;
+    tempId:string;
     name: string;
     content: string | null;
     video: File | null;   
     courseModuleId: number | null;
     videoUrl: string | null;
+    contentNumber:number;
 }

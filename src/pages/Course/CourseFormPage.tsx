@@ -1,25 +1,41 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CourseForm from './CourseForm';
 import CourseModuleFrom from '@/components/CourseModule/CourseModuleFrom';
 import type { CourseModule,ModuleContent } from '@/types/CourseModule';
 import {Plus} from 'lucide-react'
 import type { Mode } from '../../types/Util'; 
 import { helpers } from '@/Utilities/helpers';
+import { CourseService } from '@/api/courseService';
 
 interface CourseFormPageProps{
-  mode: Mode;
+  courseId: number;
 }
 
 
 
-function CreateUpdateCourse({mode} : CourseFormPageProps) {
+function CreateUpdateCourse({courseId} : CourseFormPageProps) {
+  courseId = 1;
+  const [courseModules,setCourseModules] = useState<CourseModule[]>([]);
+
+  async function fetchModules() {
+    try {
+      const modules = await CourseService.getCourseModulesByCourseId(courseId?.toString());
+      setCourseModules(modules);
+    } catch (err) {
+      console.error(err);
+    } finally {
+    }
+  }
+
+  useEffect(()=>{
+    fetchModules();
+  },[courseId])
 
   const handleAddModule = () =>{
     const courseModule1:CourseModule = {tempId:helpers.generateUUID()};
     setCourseModules(prev => [...prev,courseModule1]);
   }
 
-  const [courseModules,setCourseModules] = useState<CourseModule[]>([]);
   return (
     <div className='container'>
       {/* <CourseForm></CourseForm> */}
@@ -28,7 +44,7 @@ function CreateUpdateCourse({mode} : CourseFormPageProps) {
           courseModule.moduleNumber = index +1;
          return(
           <CourseModuleFrom key={courseModule.id || courseModule.tempId} courseModule={courseModule}
-          setCourseModules={setCourseModules} courseModules={courseModules}></CourseModuleFrom>
+          setCourseModules={setCourseModules}></CourseModuleFrom>
         )})}
         
         <button type="button"

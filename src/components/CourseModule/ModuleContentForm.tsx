@@ -9,11 +9,14 @@ import ConfirmDialog from "@/components/Utilities/ConfirmDialog"
 
 interface ModuleContentFormProps {
   courseModuleId: number | null;
+  content: ModuleContent;
+  setContents: React.Dispatch<React.SetStateAction<ModuleContent[]>>;
 }
 
-export default function ModuleContentForm({ courseModuleId }: ModuleContentFormProps) {
+
+export default function ModuleContentForm({ courseModuleId,content = { name: "", content: "<p></p>" },setContents }: ModuleContentFormProps) {
   const [ContentEdit, setContentEdit] = useState<boolean>(false);
-  const [form, setForm] = useState<ModuleContent>({ name: "", content: "<p></p>" });
+  const [form, setForm] = useState<ModuleContent>(content);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [selectedVideoName, setSelectedVideoName] = useState<string | null>(null);
@@ -70,7 +73,7 @@ export default function ModuleContentForm({ courseModuleId }: ModuleContentFormP
   };
 
   const handleVideoRemove = () => {
-    setForm((prev) => ({ ...prev, video: null }));
+    setForm((prev) => ({ ...prev, video: null,videoUrl:null }));
     setSelectedVideoName(null);
     setDeleteVideo(true);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -85,7 +88,9 @@ export default function ModuleContentForm({ courseModuleId }: ModuleContentFormP
     }
   };
 
-  const handleDeleteModule = async () => {
+  const handleDeleteModuleContent = async () => {
+    setContents(prev => prev.filter(moduleContent => moduleContent.contentNumber !== content.contentNumber));
+    if(form.id === undefined) return;
     try {
       setIsSaving(true);
       await ModuleContentService.deleteModuleContent(form.id);
@@ -102,17 +107,16 @@ export default function ModuleContentForm({ courseModuleId }: ModuleContentFormP
 
   return (
     <div className='my-2'>
-        <>
+
         <ConfirmDialog
             open={showConfirmDelete}
             message="Are you sure you want to delete this lecture?"
             onConfirm={() => {
-            handleDeleteModule();
+            handleDeleteModuleContent();
             setShowConfirmDelete(false);
             }}
             onCancel={() => setShowConfirmDelete(false)}
         />
-        </>
 
       {isSaving && <BeatLoader color="#3498db" size={35} />}
       {message && <p className='text-red-600 font-bold my-2'>{message}</p>}
@@ -121,7 +125,7 @@ export default function ModuleContentForm({ courseModuleId }: ModuleContentFormP
         <div className='mt-4 p-2 border-[#b6b0ff] border-solid border-[1px] bg-white flex flex-wrap gap-2 items-center'>
           <div className='flex flex-wrap gap-2 items-center'>
             <CircleCheck className='w-4 h-4' />
-            <p className='font-semibold'>Lecture 1:</p>
+            <p className='font-semibold'>Lecture {content.contentNumber}:</p>
             <FileType className='h-4 w-4' />
             <h4>{form.name || "Untitled Lecture"}</h4>
             <button className="text-blue-600 hover:text-blue-800 cursor-pointer" onClick={handleContentModuleEdit}>

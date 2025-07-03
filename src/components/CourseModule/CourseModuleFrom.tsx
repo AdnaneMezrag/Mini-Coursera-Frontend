@@ -1,29 +1,38 @@
 import React, { useEffect, useState } from 'react'
-import type { CourseModule } from '@/types/CourseModule';
+import type { CourseModule,ModuleContent } from '@/types/CourseModule';
 import { Edit, Trash2,FileType  } from "lucide-react";
 import ModuleContentForm from './ModuleContentForm';
 import { Plus } from "lucide-react";
 import { CourseModuleService } from '@/api/courseModuleService';
 import type { Mode } from '../../types/Util'; 
+import { helpers } from '@/Utilities/helpers';
 
 
 interface CourseModuleFormProps{
 courseModule:CourseModule;
 setCourseModules: React.Dispatch<React.SetStateAction<CourseModule[]>>;
-courseModules: CourseModule[];
 }
 
 
-
-function CourseModuleFrom({courseModule,setCourseModules,courseModules}:CourseModuleFormProps) {
+function CourseModuleFrom({courseModule,setCourseModules}:CourseModuleFormProps) {
 
     const [moduleEdit,setModuleEdit] = useState<boolean>(false);
     const courseId = 1;
-    const [ moduleName,setModuleName] = useState<string>('');
+    const [ moduleName,setModuleName] = useState<string>(courseModule.name);
     const [ moduleDescription,setModuleDescription] = useState<string>(courseModule.description);
     const [courseModuleState,setCourseModuleState] = useState<CourseModule>(courseModule);
     let mode:Mode = (courseModuleState.id) ? 'update' : 'create';
+    const [contents, setContents] = useState<ModuleContent[]>(courseModule.moduleContents || []);
 
+    const handleAddLecture = () => {
+        const newLecture: ModuleContent = {
+            name: "",
+            content: "<p></p>",
+            tempId: helpers.generateUUID(), // to uniquely identify if no id exists
+            courseModuleId: courseModuleState.id || null
+        };
+        setContents(prev => [...prev, newLecture]);
+    };
 
     const handleModuleEdit = () =>{
         setModuleEdit(true);
@@ -130,14 +139,26 @@ function CourseModuleFrom({courseModule,setCourseModules,courseModules}:CourseMo
 
         {/* Module Content */}
         <div className='ml-10 mt-4'>
-            <ModuleContentForm courseModuleId={courseModuleState.id}></ModuleContentForm>
+            {contents.map((content, index) => {
+                content.contentNumber = index +1;
+                return(
+                <ModuleContentForm
+                    key={content.id || content.tempId}
+                    courseModuleId={courseModuleState.id}
+                    content={content}
+                    setContents={setContents}
+                />)
+            })}
 
-            <button type="button"
-                    className="cursor-pointer border-1 border-solid border-[#bcbdbe] bg-white flex items-center gap-2 px-4 py-2 rounded-[4px] text-primary text-sm font-medium hover:bg-hover transition"
-                >
-                <Plus className="w-4 h-4" />
-                    Add Lecture
-            </button>
+<button
+  type="button"
+  onClick={handleAddLecture}
+  className="cursor-pointer border-1 border-solid border-[#bcbdbe] bg-white flex items-center gap-2 px-4 py-2 rounded-[4px] text-primary text-sm font-medium hover:bg-hover transition"
+>
+  <Plus className="w-4 h-4" />
+  Add Lecture
+</button>
+
         </div>
 
     </div>
