@@ -15,6 +15,7 @@ async createModuleContent(moduleContent: ModuleContent) {
             form.append("videoFile", moduleContent.video);
         }
 
+        console.log(moduleContent);
         const response = await apiClient.post("/moduleContent", form);
         return response.data;
     } catch (error) {

@@ -89,7 +89,7 @@ export default function ModuleContentForm({ courseModuleId }: ModuleContentFormP
     try {
       setIsSaving(true);
       await ModuleContentService.deleteModuleContent(form.id);
-      setForm({ name: "", content: "<p></p>" });
+      setForm({ name: "", content: "<p></p>",courseModuleId:courseModuleId });
       setContentEdit(false);
       setSelectedVideoName(null);
       setDeleteVideo(false);
