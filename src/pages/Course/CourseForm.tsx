@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CreateCourseInput,CourseLevel } from "@/api/courseService";
 import {CourseService} from "@/api/courseService";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/userContext";
+import type { Mode } from "@/types/Util";
 
 const subjects = [
   { id: 1, name: "Business" },
@@ -55,9 +56,15 @@ const languages = [
 ];
 
 const levels: CourseLevel[] = ["Beginner", "Intermediate", "Advanced", "Mixed"];
+interface CourseFormProps{
+  setPageNbr: React.Dispatch<React.SetStateAction<number>>;
+  setCourseIdState: React.Dispatch<React.SetStateAction<number>>;
+  courseId: number | null;
+}
 
-export default function CourseForm() {
-    const user = useContext(UserContext);
+export default function CourseForm({setPageNbr,setCourseIdState,courseId}:CourseFormProps) {
+  let mode:Mode = courseId ? 'update' : 'create';
+  const user = useContext(UserContext);
   const [formData, setFormData] = useState<CreateCourseInput>({
     title: "",
     description: "",
@@ -71,6 +78,22 @@ export default function CourseForm() {
   const [message,setMessage] = useState("");
   const [error,setError] = useState(false);
 
+  useEffect(() => {
+    const userId = user.user?.id || 0;
+    setFormData((prev) => ({...prev,instructorId:userId}));
+    if(mode === "update"){
+      GetCourseById();
+    }
+  },[user.user])
+
+  async function GetCourseById() {
+    const course = await CourseService.getCourseById(courseId);
+    const subjectId = subjects.find(subject => subject.name === course.category)?.id;
+    const languageId = languages.find(language => language.name === course.language)?.id;
+    console.log(course.imageUrl);
+    setFormData({...course,subjectId:subjectId,languageId:languageId});
+  }
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -86,6 +109,26 @@ export default function CourseForm() {
     setFormData((prev) => ({ ...prev, imageFile: file }));
   };
 
+  async function updateCourse(){
+    try {
+        await CourseService.updateCourse(courseId,formData);
+        setMessage("Course updated successfully");
+        setCourseIdState(courseId);
+    } catch (err) {
+        console.error(err);
+    }
+  }
+
+  async function createCourse(){
+    try {
+        const courseId = await CourseService.createCourse(formData) || 0;
+        setMessage("Course created successfully");
+        setCourseIdState(courseId);
+    } catch (err) {
+        console.error(err);
+    }
+  }
+
   const handleSubmit = async () => {
     if(!user.user) {
         setMessage("You must be logged in to add a course");
@@ -94,15 +137,10 @@ export default function CourseForm() {
     }
     setError(false);
     setMessage("");
-    const userId = user.user?.id || 0;
-    console.log(userId);
-    setFormData((prev) => ({...prev,instructorId:userId}))
-    try {
-        await CourseService.createCourse(formData);
-        setMessage("Course created successfully");
-    } catch (err) {
-        console.error(err);
-    }
+    if(mode === 'create') createCourse();
+    else updateCourse();
+    setPageNbr(2);
+
   };
 
   return (
@@ -144,17 +182,36 @@ export default function CourseForm() {
           />
         </div>
 
+
+
         <div>
-          <label htmlFor="image" className="block mb-1 text-sm font-medium text-gray-700">Course Image</label>
+          <label htmlFor="image" className="block mb-1 text-sm font-medium text-gray-700">
+            Course Image
+          </label>
+
           <input
             id="image"
             type="file"
-            required
             accept="image/*"
+            required={mode === 'create'}
             onChange={handleFileChange}
-            className="w-full border border-gray-300 px-3 py-2 rounded-md text-[12px] text-gray-600 cursor-pointer"
+            className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm text-gray-600 cursor-pointer"
           />
+
+          {/* Display current file name */}
+          <p className="mt-1 text-sm text-gray-700">
+            Selected file:&nbsp;
+            <span className="font-medium text-blue-700">
+              {formData.imageFile?.name || formData.imageUrl?.split("/").pop() || "None"}
+            </span>
+          </p>
         </div>
+
+
+
+
+
+
 
         <div>
           <label htmlFor="subjectId" className="block mb-1 text-sm font-medium text-gray-700">Subject</label>

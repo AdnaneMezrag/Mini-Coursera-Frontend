@@ -8,18 +8,19 @@ import { helpers } from '@/Utilities/helpers';
 import { CourseService } from '@/api/courseService';
 
 interface CourseFormPageProps{
-  courseId: number;
+  courseId: number | null;
 }
 
 
 
 function CreateUpdateCourse({courseId} : CourseFormPageProps) {
-  courseId = 1;
+  const [courseIdState,setCourseIdState] = useState<number | null>(courseId);
   const [courseModules,setCourseModules] = useState<CourseModule[]>([]);
+  const [pageNbr,setPageNbr] = useState<number>(1);
 
   async function fetchModules() {
     try {
-      const modules = await CourseService.getCourseModulesByCourseId(courseId?.toString());
+      const modules = await CourseService.getCourseModulesByCourseId(courseIdState?.toString());
       setCourseModules(modules);
     } catch (err) {
       console.error(err);
@@ -29,16 +30,24 @@ function CreateUpdateCourse({courseId} : CourseFormPageProps) {
 
   useEffect(()=>{
     fetchModules();
-  },[courseId])
+  },[courseIdState])
 
   const handleAddModule = () =>{
     const courseModule1:CourseModule = {tempId:helpers.generateUUID()};
     setCourseModules(prev => [...prev,courseModule1]);
   }
 
+  const handlePreviousPage = () =>{
+    setPageNbr(1);
+  }
+
   return (
     <div className='container'>
-      {/* <CourseForm></CourseForm> */}
+
+      {pageNbr === 1 && (<CourseForm setPageNbr={setPageNbr} setCourseIdState={setCourseIdState}
+      courseId={1}></CourseForm>)}
+
+      {pageNbr === 2 && (
       <div className='container max-w-5xl'>
         {courseModules && courseModules.map((courseModule,index) => {
           courseModule.moduleNumber = index +1;
@@ -54,7 +63,17 @@ function CreateUpdateCourse({courseId} : CourseFormPageProps) {
           <Plus className="w-4 h-4" />Add Module
         </button>
         
-      </div>
+        <div className='p-2'>
+          <button
+            className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            onClick={handlePreviousPage}
+          >
+            Previous
+          </button>
+        </div>
+
+      </div>)}
+
 
     </div>
   )
