@@ -41,7 +41,7 @@ export const EnrollmentService = {
       return response.data; // this is the actual data returned by the API
     } catch (error) {
       console.error("Error fetching enrollment:", error);
-      throw error;
+      return null;
     }
   },
 
@@ -50,6 +50,7 @@ export const EnrollmentService = {
   moduleContentId: number;
 }): Promise<void> {
   try {
+    console.log("hi");
     await apiClient.post("enrollmentprogress", data); // Sends JSON body
 
   } catch (error) {

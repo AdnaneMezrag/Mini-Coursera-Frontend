@@ -6,6 +6,7 @@ import {Plus} from 'lucide-react'
 import type { Mode } from '../../types/Util'; 
 import { helpers } from '@/Utilities/helpers';
 import { CourseService } from '@/api/courseService';
+import { useParams } from 'react-router-dom';
 
 interface CourseFormPageProps{
   courseId: number | null;
@@ -13,14 +14,17 @@ interface CourseFormPageProps{
 
 
 
-function CreateUpdateCourse({courseId} : CourseFormPageProps) {
-  const [courseIdState,setCourseIdState] = useState<number | null>(courseId);
+function CreateUpdateCourse() {
+
+  const {courseId} = useParams();
+  const [courseIdState,setCourseIdState] = useState<number | null>(parseInt(courseId));
   const [courseModules,setCourseModules] = useState<CourseModule[]>([]);
   const [pageNbr,setPageNbr] = useState<number>(1);
 
   async function fetchModules() {
+    if(!courseIdState) return;
     try {
-      const modules = await CourseService.getCourseModulesByCourseId(courseIdState?.toString());
+      const modules = await CourseService.getCourseModulesByCourseId(courseIdState?.toString() || "");
       setCourseModules(modules);
     } catch (err) {
       console.error(err);
@@ -45,7 +49,7 @@ function CreateUpdateCourse({courseId} : CourseFormPageProps) {
     <div className='container'>
 
       {pageNbr === 1 && (<CourseForm setPageNbr={setPageNbr} setCourseIdState={setCourseIdState}
-      courseId={1}></CourseForm>)}
+      courseId={courseIdState}></CourseForm>)}
 
       {pageNbr === 2 && (
       <div className='container max-w-5xl'>
@@ -53,7 +57,7 @@ function CreateUpdateCourse({courseId} : CourseFormPageProps) {
           courseModule.moduleNumber = index +1;
          return(
           <CourseModuleFrom key={courseModule.id || courseModule.tempId} courseModule={courseModule}
-          setCourseModules={setCourseModules}></CourseModuleFrom>
+          setCourseModules={setCourseModules} courseID = {courseIdState}></CourseModuleFrom>
         )})}
         
         <button type="button"

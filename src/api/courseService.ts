@@ -1,4 +1,5 @@
 import apiClient from "./apiClient";
+import type { CourseType } from "@/types/CourseType";
 
 export interface CreateCourseInput {
   title: string;
@@ -90,6 +91,18 @@ async updateCourse(courseId: number, courseData: CreateCourseInput): Promise<voi
   } catch (error: any) {
     const message = error.response?.data?.message || error.message;
     throw new Error(`Course update failed: ${message}`);
+  }
+},
+
+async getInstructorCourses(instructorId: number): Promise<CourseType[]> {
+  try {
+    const response = await apiClient.get('/courses/instructorCourses', {
+      params: { instructorId }
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || error.message;
+    throw new Error(`Failed to fetch instructor courses: ${message}`);
   }
 }
 

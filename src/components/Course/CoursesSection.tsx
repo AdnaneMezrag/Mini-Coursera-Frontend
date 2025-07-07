@@ -1,5 +1,6 @@
 import Course from './Course';
 import { useCourses } from '../../hooks/useCourses';
+import type { CourseType } from '@/types/CourseType';
 
 function CourseSection(sectionType: string) {
   switch (sectionType) {
@@ -16,7 +17,12 @@ function CourseSection(sectionType: string) {
   }
 }
 
-function CoursesSection({ sectionType }: { sectionType: string }) {
+interface CoursesSectionProps{
+sectionType: string;
+Externalcourses?:CourseType[];
+}
+
+function CoursesSection({ sectionType,Externalcourses }: CoursesSectionProps) {
   const { courses, isLoading, error } = useCourses(sectionType);
   const sectionHeader = CourseSection(sectionType);
 

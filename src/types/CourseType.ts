@@ -3,7 +3,7 @@ import type { URLSearchParamsInit } from 'react-router-dom';
 
 // types/course-types.ts
 export type CourseSectionType = 'NewCourses' | 'PopularCourses' | 'DiscoverCourses' | 'SearchCourses'
-| 'FilterCourses';
+| 'FilterCourses' | 'InstructorCourses';
 
 export interface CourseProps {
   // Define any props you want to pass to the component

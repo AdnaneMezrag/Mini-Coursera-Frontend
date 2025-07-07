@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
     DISCOVER: `${host}/api/courses/discover`,
     SEARCH: `${host}/api/courses/search`,
     GET: `${host}/api/courses/`,
+    INSTRUCTOR: '/courses/instructorCourses',
   },
   USERS: `${host}/api/users`,
   // ... other endpoints

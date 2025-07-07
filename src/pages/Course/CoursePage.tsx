@@ -21,28 +21,32 @@ export default function CoursePage() {
 
 
 
-  const EnrollStudent = () =>{
+  async function EnrollStudent (){
     const studentID = user?.id || 0;
     const courseID = course.id;
-    if(user){
-      navigate(`/course/${encodeURIComponent(courseID)}/content`);
+    if(!user){
+      console.log("You must be logged in to be able to enroll");
       return;
     }
-    EnrollmentService.enrollStudent(courseID,studentID)
-      .then(() => {
+    const result = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseID,studentID);
+    if(result){
         navigate(`/course/${encodeURIComponent(courseID)}/content`);
-      })
-      .catch((err) => {
-        console.error('Enrollment failed:', err);
-      });
-  } 
+    }else{
+      EnrollmentService.enrollStudent(courseID,studentID)
+        .then(() => {
+          navigate(`/course/${encodeURIComponent(courseID)}/content`);
+        })
+        .catch((err) => {
+          console.error('Enrollment failed:', err);
+        });
+      } 
+    }
 
   const handleEnroll = () => {
     if(!user){
       setShowSignupModal(true);
-    }else{
-      EnrollStudent();
     }
+    EnrollStudent();
   };
 
   const handleCloseModal = () => {

@@ -11,18 +11,20 @@ import { helpers } from '@/Utilities/helpers';
 interface CourseModuleFormProps{
 courseModule:CourseModule;
 setCourseModules: React.Dispatch<React.SetStateAction<CourseModule[]>>;
+courseID:number;
 }
 
 
-function CourseModuleFrom({courseModule,setCourseModules}:CourseModuleFormProps) {
+function CourseModuleFrom({courseModule,setCourseModules,courseID}:CourseModuleFormProps) {
 
     const [moduleEdit,setModuleEdit] = useState<boolean>(false);
-    const courseId = 1;
+    const courseId = courseID;
     const [ moduleName,setModuleName] = useState<string>(courseModule.name);
     const [ moduleDescription,setModuleDescription] = useState<string>(courseModule.description);
     const [courseModuleState,setCourseModuleState] = useState<CourseModule>(courseModule);
     let mode:Mode = (courseModuleState.id) ? 'update' : 'create';
     const [contents, setContents] = useState<ModuleContent[]>(courseModule.moduleContents || []);
+
 
     const handleAddLecture = () => {
         const newLecture: ModuleContent = {
@@ -34,7 +36,7 @@ function CourseModuleFrom({courseModule,setCourseModules}:CourseModuleFormProps)
         setContents(prev => [...prev, newLecture]);
     };
 
-    const handleModuleEdit = () =>{
+    const handleModuleEdit = () => {
         setModuleEdit(true);
     }
 

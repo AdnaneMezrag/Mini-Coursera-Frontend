@@ -18,16 +18,16 @@ function CourseContentPage() {
   const [enrollment,setEnrollment] = useState({});
   const [completedModuleContents,setcompletedModuleContents] = useState([]);
 
+
   const user = useContext(UserContext);
 
-  const handleMarkCourse = (moduleContentId:number) => {
-    if(!user.user || enrollment.id === undefined){
-          console.log(enrollment);
-
+  async function handleMarkCourse (moduleContentId:number) {
+    if(!user.user || !enrollment?.id){
+      console.log(enrollment);
       return;
     }
     if(completedModuleContents.includes(moduleContentId)) return;
-    EnrollmentService.createEnrollmentProgress({enrollmentId: enrollment.id,moduleContentId:moduleContentId });
+    await EnrollmentService.createEnrollmentProgress({enrollmentId: enrollment.id,moduleContentId:moduleContentId });
     setcompletedModuleContents([...completedModuleContents,moduleContentId]); 
   }
 
@@ -35,10 +35,9 @@ function CourseContentPage() {
     if(!user.user){
       return ;
     }
-    const result = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseId,user.user?.id);
-    setEnrollment(result);
-    setcompletedModuleContents(result.enrollmentProgress.map(x => x.moduleContentId));
-    console.log("Module Content IDs: ",result.enrollmentProgress.map(x => x.moduleContentId));
+    const enrollment = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseId,user.user?.id);
+    setEnrollment(enrollment);
+    setcompletedModuleContents(enrollment.enrollmentProgress.map(x => x.moduleContentId));
   }
   
 
@@ -47,12 +46,13 @@ function CourseContentPage() {
   CourseService.getCourseModulesByCourseId(courseId || "")
     .then(response => {
       setCourseSections(response); // Ensure sections is an array
-    } )
+    })
     .catch(error => {
       console.error('Error fetching course sections:', error);
       return []; // Return an empty array or handle the error as needed
     });
   }, [courseId]);
+
 
   return (
     <div>
@@ -92,8 +92,6 @@ function CourseContentPage() {
 
         </main>
       </div>
-
-
 
     </div>
   )

@@ -7,6 +7,7 @@ import CoursePage from './pages/Course/CoursePage';
 import CourseContentPage from './pages/Course/CourseContentPage';
 import MyLearningPage from './pages/MyLearningPage';
 import CreateUpdateCoursePage from './pages/Course/CreateUpdateCoursePage';
+import InstructorCoursesPage from './pages/Course/InstructorCoursesPage';
 
 function App() {
 
@@ -28,8 +29,9 @@ function App() {
               <Route path='/course/:id' element={<CoursePage/>} />
               <Route path='/course/:id/content' element={<CourseContentPage/>}/>
               <Route path='/my-learning/' element= {<MyLearningPage/>}></Route>
-              <Route path='/courses/new' element= {<CreateUpdateCoursePage mode='create'/>}></Route>
-              <Route path='/courses/:courseId/edit' element={<CreateUpdateCoursePage mode='update'/>}></Route>
+              <Route path='/courses/new' element= {<CreateUpdateCoursePage/>}></Route>
+              <Route path='/courses/:courseId/edit' element={<CreateUpdateCoursePage/>}></Route>
+              <Route path='/courses/InstructorCourses' element= {<InstructorCoursesPage/>}></Route>
             </Routes>
         </div>
       </main>

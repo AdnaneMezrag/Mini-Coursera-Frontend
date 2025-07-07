@@ -12,7 +12,7 @@ function Navigation() {
         </div>
 
         <div>
-          <Link to="courses/new" className='hover:text-primary'>Create Course</Link>
+          <Link to="courses/InstructorCourses" className='hover:text-primary'>Create Course</Link>
         </div>
     </nav>
   )
