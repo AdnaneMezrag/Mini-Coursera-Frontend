@@ -28,7 +28,7 @@ export default function SignupLoginPage({ onClose }: { onClose: () => void }) {
       firstName: firstNameData,
       lastName:lastNameData,
       photo: formData.profileImage,
-    }).then(response => {
+    }).then(() => {
         console.log('User created successfully');
         setIsLogin(true);
   })
