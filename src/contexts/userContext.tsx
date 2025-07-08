@@ -1,5 +1,5 @@
 // contexts/userContext.tsx
-import { createContext, useState } from "react";
+import { createContext, useState,useEffect } from "react";
 import type { User } from "../types/UserType";
 
 interface UserContextType {
@@ -16,6 +16,14 @@ export const UserContext = createContext<UserContextType>({
 // Create the provider
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+
+  // ✅ Define this useEffect here — inside UserProvider
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

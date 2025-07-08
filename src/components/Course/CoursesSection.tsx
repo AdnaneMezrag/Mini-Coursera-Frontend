@@ -19,10 +19,9 @@ function CourseSection(sectionType: string) {
 
 interface CoursesSectionProps{
 sectionType: string;
-Externalcourses?:CourseType[];
 }
 
-function CoursesSection({ sectionType,Externalcourses }: CoursesSectionProps) {
+function CoursesSection({ sectionType }: CoursesSectionProps) {
   const { courses, isLoading, error } = useCourses(sectionType);
   const sectionHeader = CourseSection(sectionType);
 

@@ -4,6 +4,7 @@ import {CourseService} from "@/api/courseService";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/userContext";
 import type { Mode } from "@/types/Util";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const subjects = [
   { id: 1, name: "Business" },
@@ -77,6 +78,7 @@ export default function CourseForm({setPageNbr,setCourseIdState,courseId}:Course
   });
   const [message,setMessage] = useState("");
   const [error,setError] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userId = user.user?.id || 0;
@@ -90,7 +92,6 @@ export default function CourseForm({setPageNbr,setCourseIdState,courseId}:Course
     const course = await CourseService.getCourseById(courseId);
     const subjectId = subjects.find(subject => subject.name === course.category)?.id;
     const languageId = languages.find(language => language.name === course.language)?.id;
-    console.log(course.imageUrl);
     setFormData({...course,subjectId:subjectId,languageId:languageId});
   }
   
@@ -137,14 +138,15 @@ export default function CourseForm({setPageNbr,setCourseIdState,courseId}:Course
     }
     setError(false);
     setMessage("");
-    if(mode === 'create') createCourse();
-    else updateCourse();
+    if(mode === 'create') await createCourse();
+    else await updateCourse();
     setPageNbr(2);
 
   };
 
   return (
     <div className="container max-w-5xl p-6 bg-white rounded-xl shadow-md space-y-6">
+      {!user.user && navigate('/')}
         {message && (
             <p className={`${error?'text-red-700':'text-green-700'} font-bold`}>{message}</p>
         )}

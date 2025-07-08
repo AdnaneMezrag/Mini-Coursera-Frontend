@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import { CourseModuleService } from '@/api/courseModuleService';
 import type { Mode } from '../../types/Util'; 
 import { helpers } from '@/Utilities/helpers';
+import ConfirmDialog from '../Utilities/ConfirmDialog';
 
 
 interface CourseModuleFormProps{
@@ -16,7 +17,6 @@ courseID:number;
 
 
 function CourseModuleFrom({courseModule,setCourseModules,courseID}:CourseModuleFormProps) {
-
     const [moduleEdit,setModuleEdit] = useState<boolean>(false);
     const courseId = courseID;
     const [ moduleName,setModuleName] = useState<string>(courseModule.name);
@@ -24,6 +24,16 @@ function CourseModuleFrom({courseModule,setCourseModules,courseID}:CourseModuleF
     const [courseModuleState,setCourseModuleState] = useState<CourseModule>(courseModule);
     let mode:Mode = (courseModuleState.id) ? 'update' : 'create';
     const [contents, setContents] = useState<ModuleContent[]>(courseModule.moduleContents || []);
+    const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+
+    const cancelDelete = () => {
+        setShowConfirmDialog(false);
+    };
+
+    const confirmDelete = () => {
+        handleRemoveModule(courseModule.moduleNumber);
+        setShowConfirmDialog(false);
+    };
 
 
     const handleAddLecture = () => {
@@ -62,8 +72,12 @@ function CourseModuleFrom({courseModule,setCourseModules,courseID}:CourseModuleF
     }
     
   return (
-    <div className='rounded-xl mt-2 bg-[#F3F5F7] p-6 border-1 border-solid border-[#bcbdbe]'>
 
+    <div className='rounded-xl mt-2 bg-[#F3F5F7] p-6 border-1 border-solid border-[#bcbdbe]'>
+        <ConfirmDialog
+        open={showConfirmDialog}
+        message={`Are you sure you want to delete module "${moduleName}"?`}
+        onConfirm={confirmDelete} onCancel={cancelDelete} />
         {/* Course Module */}
         {!moduleEdit && (
             <div className='flex flex-wrap gap-2 items-start'>
@@ -75,7 +89,7 @@ function CourseModuleFrom({courseModule,setCourseModules,courseID}:CourseModuleF
                 </button>
 
                 <button className="text-red-600 hover:text-red-800 cursor-pointer"
-                onClick={() => handleRemoveModule(courseModule.moduleNumber)}>
+                onClick={() => setShowConfirmDialog(true)}>
                     <Trash2 className="w-5 h-5" />
                 </button>
             </div>

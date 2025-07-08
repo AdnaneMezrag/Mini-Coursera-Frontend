@@ -12,7 +12,7 @@ export const UserService = {
     formData.append('userCreateDTO.UserType', userData.userType.toString());
 
     if (userData.photo instanceof File) {
-      formData.append('userCreateDTO.image', userData.photo);
+      formData.append('image', userData.photo);
     }
     await apiClient.post('/user', formData);
   },

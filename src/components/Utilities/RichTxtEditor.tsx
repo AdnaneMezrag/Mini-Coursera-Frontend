@@ -1,29 +1,89 @@
-import { EditorContent, useEditor } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import TextStyle from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
+import { Extension } from "@tiptap/core";
+import DOMPurify from "dompurify";
 import React from "react";
-import { Bold, Italic, Underline as UnderlineIcon, Paintbrush, Type } from "lucide-react";
-import { FontSize } from "../../Utilities/FontSize"; // Your custom font size extension
-import DOMPurify from 'dompurify';
+import {
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  Paintbrush,
+  Type,
+} from "lucide-react";
 
-export default function RichTextEditor({
-  value,
-  onChange,
-}: {
+// 🧩 Inline FontSize Extension (no external file needed)
+const FontSize = Extension.create({
+  name: "fontSize",
+
+  addOptions() {
+    return {
+      types: ["textStyle"],
+    };
+  },
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          fontSize: {
+            default: null,
+            parseHTML: (element: HTMLElement) =>
+              element.style.fontSize || null,
+            renderHTML: (attributes: any) => {
+              if (!attributes.fontSize) return {};
+              return {
+                style: `font-size: ${attributes.fontSize}`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+
+  addCommands() {
+    return {
+      setFontSize:
+        (fontSize: string) =>
+        ({ chain }: any) => {
+          return chain().setMark("textStyle", { fontSize }).run();
+        },
+    };
+  },
+});
+
+// 🔧 TypeScript hack: extend the chain type manually
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    fontSize: {
+      setFontSize: (fontSize: string) => ReturnType;
+    };
+  }
+}
+
+// 📝 Component Props
+interface RichTextEditorProps {
   value: string;
   onChange: (val: string) => void;
-}) {
+}
+
+// ✅ Component
+const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  value,
+  onChange,
+}) => {
   const editor = useEditor({
     extensions: [StarterKit, Underline, TextStyle, Color, FontSize],
     content: value,
-onUpdate: ({ editor }) => {
-  //Making sure the content is santized before saving to the backedn
-  const dirtyHTML = editor.getHTML();
-  const cleanHTML = DOMPurify.sanitize(dirtyHTML);
-  onChange(cleanHTML);
-},
+    onUpdate: ({ editor }) => {
+      const dirtyHTML = editor.getHTML();
+      const cleanHTML = DOMPurify.sanitize(dirtyHTML);
+      onChange(cleanHTML);
+    },
   });
 
   if (!editor) return null;
@@ -89,7 +149,7 @@ onUpdate: ({ editor }) => {
         </div>
       </div>
 
-      {/* Editor Content */}
+      {/* Content */}
       <div className="border border-gray-300 rounded-md p-2 min-h-[150px]">
         <EditorContent
           editor={editor}
@@ -98,8 +158,11 @@ onUpdate: ({ editor }) => {
       </div>
     </div>
   );
-}
+};
 
+export default RichTextEditor;
+
+// 🔘 Styling
 const button =
   "px-2 py-1 text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100";
 const active =

@@ -41,6 +41,7 @@ function Header() {
     console.log("Logging out...");
     navigate("/");
     setUser(null);
+    localStorage.removeItem("user");
   };
 
   return (
@@ -101,8 +102,9 @@ function Header() {
               <div className='absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50'>
                 {user ? (
                   <>
-                    <Link to="/my-learning" className='block px-4 py-2 hover:bg-hover text-sm'>My Courses</Link>
                     <Link to="/"className='block px-4 py-2 hover:bg-hover text-sm'>Home</Link>
+                    <Link to="/my-learning" className='block px-4 py-2 hover:bg-hover text-sm'>My Learning</Link>
+                    <Link to="/courses/InstructorCourses" className='block px-4 py-2 hover:bg-hover text-sm'>My Courses</Link>
                     <button onClick={handleLogout} className='cursor-pointer w-full text-left px-4 py-2 hover:bg-hover text-sm'>
                       Log Out</button>
                   </>

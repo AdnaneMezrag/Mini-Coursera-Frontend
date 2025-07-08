@@ -16,7 +16,8 @@ interface FormData {
 export default function SignupLoginPage({ onClose }: { onClose: () => void }) {
 
   const { setUser } = useContext(UserContext);
-  const handleSignup = () => {
+
+  function handleSignup () {
     const firstNameData = formData.fullName.split(' ')[0];
     const lastNameData = formData.fullName.split(' ').slice(1).join(' ') || '';
     // Logic to handle course enrollment
@@ -28,20 +29,27 @@ export default function SignupLoginPage({ onClose }: { onClose: () => void }) {
       lastName:lastNameData,
       photo: formData.profileImage,
     }).then(response => {
-      if (response) {
-        // console.log('User created successfully');
-        onClose(); // Close the modal or redirect
-      }
-
+        console.log('User created successfully');
+        setIsLogin(true);
   })
-}
+  }
+
 
 const handleLogin = () => {
   UserService.getByEmailAndPassword(formData.email, formData.password)
     .then(response => {
       if (response) {
         console.log('Login successful');
-        setUser(response); // Assuming response contains user data
+        setUser(response);
+        // Save in local storage
+        localStorage.setItem("user", JSON.stringify({
+          id: response.id,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          userType: response.userType,
+          photoUrl: response.photoUrl,
+        }));
         onClose(); // Close the modal or redirect
       }
     })
@@ -160,7 +168,9 @@ const [formData, setFormData] = useState<FormData>({
               required={!isLogin}
             />
             <div>
-  <label className="ml-1 block text-sm font-medium text-gray-700 my-2">
+
+
+  {/* <label className="ml-1 block text-sm font-medium text-gray-700 my-2">
     I am a:
   </label>
   <div className="flex items-center space-x-6">
@@ -186,7 +196,9 @@ const [formData, setFormData] = useState<FormData>({
           />
           <span className="text-sm text-gray-700">Instructor</span>
         </label>
-      </div>
+      </div> */}
+
+
     </div>
           </div>
           
@@ -217,7 +229,8 @@ const [formData, setFormData] = useState<FormData>({
           />
         </div>
 
-        {isLogin && (
+        {/* Remember me section & Forget Password*/}
+        {/* {isLogin && (
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
@@ -236,7 +249,7 @@ const [formData, setFormData] = useState<FormData>({
               </a>
             </div>
           </div>
-        )}
+        )} */}
 
         <button
           type="submit"

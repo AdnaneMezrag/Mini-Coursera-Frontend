@@ -18,8 +18,9 @@ function InstructorCoursesPage() {
         fetchCourses();
     },[user.user])
 
+  console.log(user.user);
   if (!user.user) {
-    return <div className="text-red-500">Unauthorized. You must be logged in to view this page.</div>;
+    return <div className="container text-red-500">Unauthorized. You must be logged in to view this page.</div>;
   }
 
   async function fetchCourses (){

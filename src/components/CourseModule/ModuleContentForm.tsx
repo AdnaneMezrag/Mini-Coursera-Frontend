@@ -35,6 +35,7 @@ export default function ModuleContentForm({ courseModuleId,content = { name: "",
   const updateModuleContent = async () => {
     try {
       await ModuleContentService.updateModuleContent(form, deleteVideo);
+      setContentEdit(false);
     } catch {
       setMessage("Failed to update lecture");
     }
@@ -44,13 +45,14 @@ export default function ModuleContentForm({ courseModuleId,content = { name: "",
     try {
       const moduleContentId = await ModuleContentService.createModuleContent(form);
       setForm((prev) => ({ ...prev, id: moduleContentId }));
+      setContentEdit(false);
       return true;
     } catch {
       return false;
     }
   };
 
-  const handleSaveModule = async (e) => {
+  const handleSaveModuleContent = async (e) => {
     e.preventDefault();
     if (courseModuleId === undefined) {
       setMessage("You can't save the lecture because you haven't added a course module.");
@@ -140,11 +142,12 @@ export default function ModuleContentForm({ courseModuleId,content = { name: "",
 
       {ContentEdit && (
         <div className='p-2 border-[#b6b0ff] border-solid border-[1px] bg-white'>
-          <form onSubmit={handleSaveModule}>
+          <form onSubmit={handleSaveModuleContent}>
             <input
               type="text"
               className='w-full p-1 border-[#b6b0ff] border-solid border-[1px] rounded-[5px]'
               placeholder='Enter lecture title here'
+              required
               value={form.name}
               onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
             />

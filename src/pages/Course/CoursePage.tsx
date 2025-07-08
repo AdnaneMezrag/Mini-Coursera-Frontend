@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import FAQs from '../../components/Utilities/FAQs';
 import Modules from '../../components/CourseModule/Modules';
@@ -7,25 +7,38 @@ import SignupLoginPage from '.././SignLoginPage';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/userContext';
 import { EnrollmentService } from '../../api/enrollmentService';
+import { CourseService } from '@/api/courseService';
+import { useLocation } from "react-router-dom";
+
 
 export default function CoursePage() {
   const { id } = useParams();
   const { course, isLoading, error } = useFetchCourseById(id);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const { user } = useContext(UserContext);
+  const [enrollmentsCount , setEnrollmentsCount] = useState<number>(0);
   const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+ 
+    useEffect(()=>{
+    fetchEnrollmentsCount();
+  })
+
+
+
 
   if (isLoading) return <div className="container py-10">Loading...</div>;
   if (error) return <div className="container py-10 text-red-500">{error}</div>;
   if (!course) return null;
 
-
-
-  async function EnrollStudent (){
+  async function EnrollStudent () {
     const studentID = user?.id || 0;
     const courseID = course.id;
     if(!user){
-      console.log("You must be logged in to be able to enroll");
       return;
     }
     const result = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseID,studentID);
@@ -40,7 +53,7 @@ export default function CoursePage() {
           console.error('Enrollment failed:', err);
         });
       } 
-    }
+  }
 
   const handleEnroll = () => {
     if(!user){
@@ -53,12 +66,20 @@ export default function CoursePage() {
     setShowSignupModal(false);
   };
 
+  async function fetchEnrollmentsCount () {
+    try{
+      const enrollmentsCount = await CourseService.getEnrollmentsCountByCourseId(course.id);
+      setEnrollmentsCount(enrollmentsCount);
+    }catch{
+      throw new Error("Failed to fetch enrollments count");
+    }
+  }
 
- 
+
 
   return (
 
-    <div className={``}>
+    <div>
       {/* Modal Overlay */}
       {showSignupModal && (
         <div 
@@ -90,7 +111,7 @@ export default function CoursePage() {
             Enroll Now
           </button>
           <p className='text-[12px]'>
-            <span className='font-bold'>{course.enrollmentsCount}</span> already enrolled
+            <span className='font-bold'>{enrollmentsCount}</span> already enrolled
           </p>
         </div>
       </div>

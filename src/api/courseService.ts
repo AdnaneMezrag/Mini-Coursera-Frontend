@@ -104,6 +104,18 @@ async getInstructorCourses(instructorId: number): Promise<CourseType[]> {
     const message = error.response?.data?.message || error.message;
     throw new Error(`Failed to fetch instructor courses: ${message}`);
   }
+},
+
+async getEnrollmentsCountByCourseId(courseId: number): Promise<number> {
+  try {
+    const response = await apiClient.get('/courses/enrollmentsCount', {
+      params: { courseId },
+    });
+    return response.data; // This should be the integer count
+  } catch (error: any) {
+    const message = error.response?.data?.message || error.message;
+    throw new Error(`Failed to fetch enrollments count: ${message}`);
+  }
 }
 
 

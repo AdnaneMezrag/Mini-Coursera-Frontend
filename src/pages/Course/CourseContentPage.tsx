@@ -1,12 +1,13 @@
 import CourseContentMenu from '../../components/Course/CourseContentMenu'
 import { CourseService } from '../../api/courseService';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import SafeHTML from '../../components/Utilities/SafeHTML';
 import { EnrollmentService } from '../../api/enrollmentService';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/userContext';
-
+import CourseVideoPlayer from '@/components/Utilities/CourseVideoPlayer';
+import { Navigate } from 'react-router-dom';
 
 function CourseContentPage() {
   const [courseSections, setCourseSections] = useState([]);
@@ -17,7 +18,7 @@ function CourseContentPage() {
   const contentName = moduleContent.name;
   const [enrollment,setEnrollment] = useState({});
   const [completedModuleContents,setcompletedModuleContents] = useState([]);
-
+  const navigate = useNavigate();
 
   const user = useContext(UserContext);
 
@@ -39,9 +40,9 @@ function CourseContentPage() {
     setEnrollment(enrollment);
     setcompletedModuleContents(enrollment.enrollmentProgress.map(x => x.moduleContentId));
   }
-  
 
   useEffect(() => {
+  if(!user.user) navigate('/');
   GetEnrollment();
   CourseService.getCourseModulesByCourseId(courseId || "")
     .then(response => {
@@ -56,6 +57,7 @@ function CourseContentPage() {
 
   return (
     <div>
+      {/* {!user.user && navigate('/')} */}
       <div className='container sm:grid sm:grid-cols-[2fr_8fr] gap-10 p-2'>
         <aside>
           <CourseContentMenu CourseModules={courseSections} setModuleContent={setModuleContent}
@@ -64,20 +66,7 @@ function CourseContentPage() {
 
         <main className='mt-10 sm:mt-0'>
           <h2 className='text-4xl font-medium mb-6'>{contentName}</h2>
-          {videoUrl &&
-          <video className='rounded-lg'
-                key={videoUrl} // 🔥 force re-render when URL changes
-                controls
-                style={{ width: '100%', height: 'auto' }}
-              >
-                <source
-                  src={videoUrl}
-                  type="video/mp4"
-                />
-                Your browser does not support the video tag.
-          </video>
-          }
-          
+          {videoUrl && <CourseVideoPlayer videoUrl={videoUrl} />}
 
         <article className={videoUrl && 'mt-10 w-full' }>
           <SafeHTML html = {content}></SafeHTML>

@@ -65,14 +65,12 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile App Section */}
+          {/* Contact Us Section */}
           <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 mb-8 px-2">
-            <h2 className="text-lg font-semibold mb-4 text-gray-800">Mobile App</h2>
+            <h2 className="text-lg font-semibold mb-4 text-gray-800">Contact Us</h2>
             <ul className="space-y-2">
-              <li className="text-sm hover:text-blue-600 cursor-pointer">Download on the App Store</li>
-              <li className="text-sm hover:text-blue-600 cursor-pointer">Get it on Google Play</li>
-              <li className="text-sm hover:text-blue-600 cursor-pointer">Certified</li>
-              <li className="text-sm hover:text-blue-600 cursor-pointer">B Corporation</li>
+              <li><a href="mailto:mezragadnane@gmail.com" className="text-sm hover:text-blue-600 cursor-pointer">mezragadnane@gmail.com</a></li>
+              <li className="text-sm hover:text-blue-600 cursor-pointer"><a href="https://www.linkedin.com/in/adnane-mezrag-525637248/">https://www.linkedin.com/in/adnane-mezrag-525637248</a></li>
             </ul>
           </div>
         </div>
