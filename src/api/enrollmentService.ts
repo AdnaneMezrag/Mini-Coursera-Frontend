@@ -15,7 +15,7 @@ export const EnrollmentService = {
     }
   },
 
-  async GetEnrolledCoursesByStudentId(studentId: number) {
+  async GetEnrolledCoursesByStudentId(studentId: number):Promise<any> {
     try {
         const response = await apiClient.get(`enrollment/student/${studentId}`);
         return response.data;

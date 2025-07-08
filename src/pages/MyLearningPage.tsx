@@ -6,8 +6,8 @@ import { UserContext } from '../contexts/userContext';
 
 function MyLearningPage() {
   const [isCompleted, setIsCompleted] = useState(false); // false = In Progress, true = Completed
-  const [allCourses, setAllCourses] = useState([]);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [allCourses, setAllCourses] = useState<{ isCompleted: boolean }[]>([]);
+  const [enrolledCourses, setEnrolledCourses] = useState<Array<{ isCompleted: boolean }>>([]);
   const studentId = useContext(UserContext).user?.id || 0;
 
   // ✅ Fetch once on component mount

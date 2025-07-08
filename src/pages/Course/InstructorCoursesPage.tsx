@@ -25,8 +25,10 @@ function InstructorCoursesPage() {
 
   async function fetchCourses (){
     try{
+      if (user && user.user) {
         const data = await CourseService.getInstructorCourses(user.user.id);
         setCourses(data);
+      }
     }catch{
     }
   }

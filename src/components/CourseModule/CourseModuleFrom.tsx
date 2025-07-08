@@ -12,7 +12,7 @@ import ConfirmDialog from '../Utilities/ConfirmDialog';
 interface CourseModuleFormProps{
 courseModule:CourseModule;
 setCourseModules: React.Dispatch<React.SetStateAction<CourseModule[]>>;
-courseID:number;
+courseID:number | null;
 }
 
 
