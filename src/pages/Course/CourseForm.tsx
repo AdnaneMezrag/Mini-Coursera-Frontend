@@ -4,7 +4,7 @@ import {CourseService} from "@/api/courseService";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/userContext";
 import type { Mode } from "@/types/Util";
-import { Navigate, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 const subjects = [
   { id: 1, name: "Business" },
@@ -59,7 +59,7 @@ const languages = [
 const levels: CourseLevel[] = ["Beginner", "Intermediate", "Advanced", "Mixed"];
 interface CourseFormProps{
   setPageNbr: React.Dispatch<React.SetStateAction<number>>;
-  setCourseIdState: React.Dispatch<React.SetStateAction<number>>;
+  setCourseIdState: React.Dispatch<React.SetStateAction<number | null>>;
   courseId: number | null;
 }
 
@@ -74,13 +74,17 @@ export default function CourseForm({setPageNbr,setCourseIdState,courseId}:Course
     languageId: 1,
     level: "Beginner",
     imageFile: null,
-    instructorId: 0
+    instructorId: 0,
+    imageUrl:'',
   });
   const [message,setMessage] = useState("");
   const [error,setError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    if(!user.user){
+      navigate('/');
+    }
     const userId = user.user?.id || 0;
     setFormData((prev) => ({...prev,instructorId:userId}));
     if(mode === "update"){
@@ -146,7 +150,6 @@ export default function CourseForm({setPageNbr,setCourseIdState,courseId}:Course
 
   return (
     <div className="container max-w-5xl p-6 bg-white rounded-xl shadow-md space-y-6">
-      {!user.user && navigate('/')}
         {message && (
             <p className={`${error?'text-red-700':'text-green-700'} font-bold`}>{message}</p>
         )}

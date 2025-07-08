@@ -1,30 +1,27 @@
 import { useEffect, useState } from 'react'
 import CourseForm from './CourseForm';
 import CourseModuleFrom from '@/components/CourseModule/CourseModuleFrom';
-import type { CourseModule,ModuleContent } from '@/types/CourseModule';
+import type { CourseModule } from '@/types/CourseModule';
 import {Plus} from 'lucide-react'
-import type { Mode } from '../../types/Util'; 
 import { helpers } from '@/Utilities/helpers';
 import { CourseService } from '@/api/courseService';
 import { useParams } from 'react-router-dom';
-
-interface CourseFormPageProps{
-  courseId: number | null;
-}
 
 
 
 function CreateUpdateCourse() {
 
-  const {courseId} = useParams();
-  const [courseIdState,setCourseIdState] = useState<number | null>(parseInt(courseId));
+  const { courseId: courseIdStr } = useParams(); // courseIdStr is string | undefined
+  const courseId = Number(courseIdStr); // ✅ Now courseId is a number  console.log(courseId);
+  const [courseIdState,setCourseIdState] = useState<number | null>(courseId);
   const [courseModules,setCourseModules] = useState<CourseModule[]>([]);
   const [pageNbr,setPageNbr] = useState<number>(1);
 
   async function fetchModules() {
     if(!courseIdState) return;
     try {
-      const modules = await CourseService.getCourseModulesByCourseId(courseIdState?.toString() || "");
+      const modules = await CourseService.getCourseModulesByCourseId(courseIdState);
+      console.log("Modules: ",modules);
       setCourseModules(modules);
     } catch (err) {
       console.error(err);
@@ -34,10 +31,10 @@ function CreateUpdateCourse() {
 
   useEffect(()=>{
     fetchModules();
-  },[courseIdState])
+  },[courseIdState,pageNbr])
 
   const handleAddModule = () =>{
-    const courseModule1:CourseModule = {tempId:helpers.generateUUID()};
+    const courseModule1:CourseModule = {tempId:helpers.generateUUID(),id:null,name:'',description:'',moduleContents:null,moduleNumber:0};
     setCourseModules(prev => [...prev,courseModule1]);
   }
 

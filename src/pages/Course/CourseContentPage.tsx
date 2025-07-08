@@ -7,17 +7,18 @@ import { EnrollmentService } from '../../api/enrollmentService';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/userContext';
 import CourseVideoPlayer from '@/components/Utilities/CourseVideoPlayer';
-import { Navigate } from 'react-router-dom';
+
 
 function CourseContentPage() {
   const [courseSections, setCourseSections] = useState([]);
-  const { id:courseId } = useParams(); // id will be a string
+  const { id } = useParams();
+  const courseId = Number(id); // now it's a number
   const [moduleContent,setModuleContent] = useState({'content': '','videoUrl': '', 'name': '','id':0});
   const videoUrl = moduleContent.videoUrl;
   const content = moduleContent.content;
   const contentName = moduleContent.name;
-  const [enrollment,setEnrollment] = useState({});
-  const [completedModuleContents,setcompletedModuleContents] = useState([]);
+  const [enrollment,setEnrollment] = useState<any>({});
+  const [completedModuleContents,setcompletedModuleContents] = useState<any>([]);
   const navigate = useNavigate();
 
   const user = useContext(UserContext);
@@ -38,13 +39,13 @@ function CourseContentPage() {
     }
     const enrollment = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseId,user.user?.id);
     setEnrollment(enrollment);
-    setcompletedModuleContents(enrollment.enrollmentProgress.map(x => x.moduleContentId));
+    setcompletedModuleContents(enrollment.enrollmentProgress.map((x: { moduleContentId: number }) => x.moduleContentId));
   }
 
   useEffect(() => {
   if(!user.user) navigate('/');
   GetEnrollment();
-  CourseService.getCourseModulesByCourseId(courseId || "")
+  CourseService.getCourseModulesByCourseId(courseId)
     .then(response => {
       setCourseSections(response); // Ensure sections is an array
     })

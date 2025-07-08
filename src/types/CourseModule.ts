@@ -3,7 +3,7 @@ export type CourseModule = {
     id:number | null;
     name: string;
     description: string;
-    contents: ModuleContent[] | null;
+    moduleContents: ModuleContent[] | null;
     //others
     moduleNumber:number;
     //Used to for deletion purposes

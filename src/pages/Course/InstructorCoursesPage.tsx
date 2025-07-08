@@ -1,11 +1,8 @@
-import { use, useContext, useEffect, useState } from 'react';
-import { useCourses } from '@/hooks/useCourses';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '@/contexts/userContext';
-import course from '@/components/Course/Course';
 import type { CourseType } from '@/types/CourseType';
 import { CourseService } from '@/api/courseService';
 import { useNavigate } from 'react-router-dom';
-import CreateUpdateCourse from './CreateUpdateCoursePage';
 import { Plus } from 'lucide-react';
 
 
@@ -18,7 +15,6 @@ function InstructorCoursesPage() {
         fetchCourses();
     },[user.user])
 
-  console.log(user.user);
   if (!user.user) {
     return <div className="container text-red-500">Unauthorized. You must be logged in to view this page.</div>;
   }

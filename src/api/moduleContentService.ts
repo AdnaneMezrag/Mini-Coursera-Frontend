@@ -1,13 +1,12 @@
-import { Form } from "react-router-dom";
 import apiClient from "./apiClient";
 import type { ModuleContent } from "@/types/CourseModule";
 
 export const ModuleContentService = {
     
-async createModuleContent(moduleContent: ModuleContent) {
+async createModuleContent(moduleContent: Partial< ModuleContent>) {
     try {
         const form = new FormData();
-        form.append("moduleContentCreateDTO.Name", moduleContent.name);
+        form.append("moduleContentCreateDTO.Name", moduleContent.name || '');
         form.append("moduleContentCreateDTO.Content", moduleContent?.content?.toString() || "");
         form.append("moduleContentCreateDTO.CourseModuleID", moduleContent?.courseModuleId?.toString() || "0");
 
@@ -25,13 +24,13 @@ async createModuleContent(moduleContent: ModuleContent) {
 },
 
 
-async updateModuleContent(moduleContent: ModuleContent , deleteVideo:boolean) {
+async updateModuleContent(moduleContent: Partial< ModuleContent> , deleteVideo:boolean) {
     try {
         const form = new FormData();
 
         // Match the .NET DTO: moduleContentDTOUpdate.ModuleContentUpdateDTO.*
-        form.append("ModuleContentUpdateDTO.Id", moduleContent.id.toString());
-        form.append("ModuleContentUpdateDTO.Name", moduleContent.name);
+        form.append("ModuleContentUpdateDTO.Id", moduleContent.id?.toString() || '');
+        form.append("ModuleContentUpdateDTO.Name", moduleContent.name || '');
         form.append("ModuleContentUpdateDTO.Content", moduleContent?.content?.toString() || "");
         form.append("ModuleContentUpdateDTO.DeleteVideo", deleteVideo ? "true" : "false");
 

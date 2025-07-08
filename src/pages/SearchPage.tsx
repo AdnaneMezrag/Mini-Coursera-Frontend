@@ -1,9 +1,16 @@
 import FilterSection from '../components/SearchPage/FilterSection';
 import CoursesSection from '../components/Course/CoursesSection';
 import { useSearchParams } from 'react-router-dom';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, [pathname]);
 
   return (
     <div className='p-1 container sm:grid sm:grid-cols-[1fr_4fr] gap-10'>

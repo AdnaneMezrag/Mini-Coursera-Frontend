@@ -9,14 +9,14 @@ import ConfirmDialog from "@/components/Utilities/ConfirmDialog"
 
 interface ModuleContentFormProps {
   courseModuleId: number | null;
-  content: ModuleContent;
+  content: Partial<ModuleContent>;
   setContents: React.Dispatch<React.SetStateAction<ModuleContent[]>>;
 }
 
 
 export default function ModuleContentForm({ courseModuleId,content = { name: "", content: "<p></p>" },setContents }: ModuleContentFormProps) {
   const [ContentEdit, setContentEdit] = useState<boolean>(false);
-  const [form, setForm] = useState<ModuleContent>(content);
+  const [form, setForm] = useState<Partial<ModuleContent>>(content);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [selectedVideoName, setSelectedVideoName] = useState<string | null>(null);
@@ -52,7 +52,7 @@ export default function ModuleContentForm({ courseModuleId,content = { name: "",
     }
   };
 
-  const handleSaveModuleContent = async (e) => {
+  const handleSaveModuleContent = async (e:React.FormEvent) => {
     e.preventDefault();
     if (courseModuleId === undefined) {
       setMessage("You can't save the lecture because you haven't added a course module.");

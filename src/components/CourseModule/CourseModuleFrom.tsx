@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import type { CourseModule,ModuleContent } from '@/types/CourseModule';
 import { Edit, Trash2,FileType  } from "lucide-react";
 import ModuleContentForm from './ModuleContentForm';
@@ -41,7 +41,11 @@ function CourseModuleFrom({courseModule,setCourseModules,courseID}:CourseModuleF
             name: "",
             content: "<p></p>",
             tempId: helpers.generateUUID(), // to uniquely identify if no id exists
-            courseModuleId: courseModuleState.id || null
+            courseModuleId: courseModuleState.id || null,
+            id:0,
+            video:null,
+            videoUrl: '',
+            contentNumber:0,
         };
         setContents(prev => [...prev, newLecture]);
     };
@@ -54,7 +58,7 @@ function CourseModuleFrom({courseModule,setCourseModules,courseID}:CourseModuleF
         if(mode === 'create'){
             const courseModuleId = await CourseModuleService.createCourseModule({courseId:courseId,name:moduleName,description:moduleDescription});
             console.log(courseModuleId);
-            setCourseModuleState({id:courseModuleId});
+            setCourseModuleState(prev => ({...prev,id: courseModuleId}));
         }else{
             CourseModuleService.updateCourseModule(courseModuleState.id || 0,{name:moduleName,description:moduleDescription});
         }

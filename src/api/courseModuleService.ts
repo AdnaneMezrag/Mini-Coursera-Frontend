@@ -3,7 +3,7 @@ import apiClient from "./apiClient";
 export const CourseModuleService = {
 
     async createCourseModule(data:{
-        courseId:number,
+        courseId:number | null,
         name:string,
         description:string
     }):Promise<number>{
