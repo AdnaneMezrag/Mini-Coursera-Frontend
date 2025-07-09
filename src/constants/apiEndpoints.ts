@@ -9,6 +9,8 @@ export const API_ENDPOINTS = {
     GET: `${host}/api/courses/`,
     INSTRUCTOR: '/courses/instructorCourses',
   },
-  USERS: `${host}/api/users`,
-  // ... other endpoints
+  USERS:{
+    CREATE:`${host}/api/users`,
+  } 
+  
 } as const;

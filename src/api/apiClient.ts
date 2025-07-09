@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://localhost:7124/api', // Replace with your API URL
+  baseURL: 'https://mini-coursera-backend.onrender.com/api', // Replace with your API URL
 });
 
 export default apiClient;
