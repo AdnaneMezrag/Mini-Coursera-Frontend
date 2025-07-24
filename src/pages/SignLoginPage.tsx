@@ -39,7 +39,7 @@ const handleLogin = () => {
   UserService.getByEmailAndPassword(formData.email, formData.password)
     .then(response => {
       if (response) {
-        console.log('Login successful');
+        // console.log('Login successful');
         setUser(response);
         // Save in local storage
         localStorage.setItem("user", JSON.stringify({
@@ -49,6 +49,7 @@ const handleLogin = () => {
           email: response.email,
           userType: response.userType,
           photoUrl: response.photoUrl,
+          accessToken: response.token, // Save the access token
         }));
         onClose(); // Close the modal or redirect
       }

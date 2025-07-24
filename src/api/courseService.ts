@@ -17,6 +17,7 @@ export type CourseLevel = "Beginner" | "Intermediate" | "Advanced" | "Mixed";
 
 
 export const CourseService = {
+  
   async getCourseModulesByCourseId(courseId: number): Promise<any> {
     try {
       const response = await apiClient.get(`/courses/modules?courseId=${courseId}`);
@@ -95,11 +96,9 @@ async updateCourse(courseId: number | null, courseData: CreateCourseInput): Prom
   }
 },
 
-async getInstructorCourses(instructorId: number): Promise<CourseType[]> {
+async getInstructorCourses(): Promise<CourseType[]> {
   try {
-    const response = await apiClient.get('/courses/instructorCourses', {
-      params: { instructorId }
-    });
+    const response = await apiClient.get('/courses/instructorCourses');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || error.message;

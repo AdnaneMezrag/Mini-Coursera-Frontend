@@ -1,5 +1,6 @@
 // src/constants/apiEndpoints.ts
-const host = 'https://mini-coursera-backend.onrender.com';
+// const host = 'https://mini-coursera-backend.onrender.com'; // Production
+const host = 'https://localhost:7124'; // Development
 export const API_ENDPOINTS = {
   COURSES: {
     NEW: `${host}/api/courses/new`,

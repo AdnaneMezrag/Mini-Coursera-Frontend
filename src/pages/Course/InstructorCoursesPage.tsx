@@ -22,7 +22,7 @@ function InstructorCoursesPage() {
   async function fetchCourses (){
     try{
       if (user && user.user) {
-        const data = await CourseService.getInstructorCourses(user.user.id);
+        const data = await CourseService.getInstructorCourses();
         setCourses(data);
       }
     }catch{

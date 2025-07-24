@@ -18,13 +18,12 @@ export const UserService = {
   },
 
   async getByEmailAndPassword(email: string, password: string): Promise<any> {
-    const response = await apiClient.get('/user/login', {
-      params: {
-        email,
-        password
-      }
-    });
-    return response.data;
-  },
+  const response = await apiClient.post('/user/login', {
+    email,
+    password
+  }, {withCredentials: true });
+  return response.data;
+ },
+
 };
 

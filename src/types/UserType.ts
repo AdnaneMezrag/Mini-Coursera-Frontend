@@ -20,4 +20,5 @@ export interface User {
   email: string;
   userType: UserTypeEnum;
   photoUrl?: string | null; // URL to the user's photo
+  accessToken?: string; // Optional access token for authenticated requests
 }

@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { EnrollmentService } from '../api/enrollmentService';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from '../contexts/userContext';
+// import { useContext } from 'react';
+// import { UserContext } from '../contexts/userContext';
 
 function MyLearningPage() {
   const [isCompleted, setIsCompleted] = useState(false); // false = In Progress, true = Completed
   const [allCourses, setAllCourses] = useState<{ isCompleted: boolean }[]>([]);
   const [enrolledCourses, setEnrolledCourses] = useState<Array<{ isCompleted: boolean }>>([]);
-  const studentId = useContext(UserContext).user?.id || 0;
+  // const studentId = useContext(UserContext).user?.id || 0;
 
   // ✅ Fetch once on component mount
   useEffect(() => {
-    EnrollmentService.GetEnrolledCoursesByStudentId(studentId)
+    EnrollmentService.GetEnrolledCoursesByStudentId()
       .then((response) => {
-        console.log("Enrolled Courses:", response);
+        // console.log("Enrolled Courses:", response);
         setAllCourses(response);
       })
       .catch((error) => {

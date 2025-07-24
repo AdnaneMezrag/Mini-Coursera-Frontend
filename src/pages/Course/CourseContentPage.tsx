@@ -37,7 +37,7 @@ function CourseContentPage() {
     if(!user.user){
       return ;
     }
-    const enrollment = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseId,user.user?.id);
+    const enrollment = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseId);
     setEnrollment(enrollment);
     setcompletedModuleContents(enrollment.enrollmentProgress.map((x: { moduleContentId: number }) => x.moduleContentId));
   }

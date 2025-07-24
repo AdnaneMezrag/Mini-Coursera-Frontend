@@ -2,10 +2,9 @@ import apiClient from "./apiClient";
 
 export const EnrollmentService = {
 
-  async enrollStudent(courseId: number, studentId: number) {
+  async enrollStudent(courseId: number) {
     try {
         const response = await apiClient.post(`enrollment`, {
-            studentId: studentId,
             courseId: courseId
         });
         return response.data;
@@ -15,9 +14,9 @@ export const EnrollmentService = {
     }
   },
 
-  async GetEnrolledCoursesByStudentId(studentId: number):Promise<any> {
+  async GetEnrolledCoursesByStudentId():Promise<any> {
     try {
-        const response = await apiClient.get(`enrollment/student/${studentId}`);
+        const response = await apiClient.get(`enrollment/studentEnrolledCourses`);
         return response.data;
     } catch (error) {
         console.error("Error fetching enrolled courses:", error);
@@ -26,14 +25,14 @@ export const EnrollmentService = {
     }
   },
 
-  async GetEnrollmentByCourseIdAndStudentId(courseId: number, studentId: number): Promise<any> {
+  async GetEnrollmentByCourseIdAndStudentId(courseId: number): Promise<any> {
     try {
       const response = await apiClient.get(
         `enrollment/by-course-and-student`,
         {
           params: {
             courseId,
-            studentId,
+            // studentId,
           },
         }
       );

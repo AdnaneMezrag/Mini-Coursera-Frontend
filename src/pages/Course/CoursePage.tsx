@@ -36,16 +36,16 @@ export default function CoursePage() {
   if (!course) return null;
 
   async function EnrollStudent () {
-    const studentID = user?.id || 0;
+    // const studentID = user?.id || 0;
     const courseID = course.id;
     if(!user){
       return;
     }
-    const result = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseID,studentID);
+    const result = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseID);
     if(result){
         navigate(`/course/${encodeURIComponent(courseID)}/content`);
     }else{
-      EnrollmentService.enrollStudent(courseID,studentID)
+      EnrollmentService.enrollStudent(courseID)
         .then(() => {
           navigate(`/course/${encodeURIComponent(courseID)}/content`);
         })
