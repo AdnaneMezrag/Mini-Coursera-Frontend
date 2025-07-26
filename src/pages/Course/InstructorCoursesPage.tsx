@@ -4,6 +4,7 @@ import type { CourseType } from '@/types/CourseType';
 import { CourseService } from '@/api/courseService';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
+import { UserTypeEnum } from '@/types/UserType';
 
 
 function InstructorCoursesPage() {
@@ -16,12 +17,15 @@ function InstructorCoursesPage() {
     },[user.user])
 
   if (!user.user) {
-    return <div className="container text-red-500">Unauthorized. You must be logged in to view this page.</div>;
+    return <div className="container text-red-500">Unauthenticated. You must be logged in to view this page.</div>;
+  }
+    if (user.user.userType === UserTypeEnum.Student) {
+    return <div className="container text-red-500">Unauthorized. You must be an instructor to view this page.</div>;
   }
 
   async function fetchCourses (){
     try{
-      if (user && user.user) {
+      if (user && user.user && user.user.userType === UserTypeEnum.Instructor) {
         const data = await CourseService.getInstructorCourses();
         setCourses(data);
       }

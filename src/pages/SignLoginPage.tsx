@@ -171,7 +171,7 @@ const [formData, setFormData] = useState<FormData>({
             <div>
 
 
-  {/* <label className="ml-1 block text-sm font-medium text-gray-700 my-2">
+  <label className="ml-1 block text-sm font-medium text-gray-700 my-2">
     I am a:
   </label>
   <div className="flex items-center space-x-6">
@@ -197,7 +197,7 @@ const [formData, setFormData] = useState<FormData>({
           />
           <span className="text-sm text-gray-700">Instructor</span>
         </label>
-      </div> */}
+      </div>
 
 
     </div>

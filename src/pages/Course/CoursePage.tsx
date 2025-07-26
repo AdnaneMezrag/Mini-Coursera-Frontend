@@ -18,7 +18,8 @@ export default function CoursePage() {
   const { user } = useContext(UserContext);
   const [enrollmentsCount , setEnrollmentsCount] = useState<number>(0);
   const navigate = useNavigate();
-    const location = useLocation();
+  const location = useLocation();
+  const [enrollError, setEnrollError] = useState<string | null>(null);
 
     useEffect(() => {
     window.scrollTo(0, 0);
@@ -35,25 +36,28 @@ export default function CoursePage() {
   if (error) return <div className="container py-10 text-red-500">{error}</div>;
   if (!course) return null;
 
-  async function EnrollStudent () {
-    // const studentID = user?.id || 0;
-    const courseID = course.id;
-    if(!user){
-      return;
-    }
+  async function EnrollStudent() {
+  setEnrollError(null); // Reset any previous error message
+  const courseID = course.id;
+  if (!user) return;
+  try {
     const result = await EnrollmentService.GetEnrollmentByCourseIdAndStudentId(courseID);
-    if(result){
-        navigate(`/course/${encodeURIComponent(courseID)}/content`);
-    }else{
-      EnrollmentService.enrollStudent(courseID)
-        .then(() => {
-          navigate(`/course/${encodeURIComponent(courseID)}/content`);
-        })
-        .catch((err) => {
-          console.error('Enrollment failed:', err);
-        });
-      } 
+    if (result) {
+      navigate(`/course/${encodeURIComponent(courseID)}/content`);
+    } else {
+      await EnrollmentService.enrollStudent(courseID);
+      navigate(`/course/${encodeURIComponent(courseID)}/content`);
+    }
+  } catch (err: any) {
+    console.error("Enrollment failed:", err);
+    if (err.response?.status === 403) {
+      setEnrollError("Only students are allowed to enroll in this course.");
+    } else {
+      setEnrollError("An error occurred during enrollment. Please try again later.");
+    }
   }
+  };
+
 
   const handleEnroll = () => {
     if(!user){
@@ -78,8 +82,8 @@ export default function CoursePage() {
 
 
   return (
+      <div>
 
-    <div>
       {/* Modal Overlay */}
       {showSignupModal && (
         <div 
@@ -98,6 +102,11 @@ export default function CoursePage() {
       {/* Course Page Content */}
       <div className='bg-hover pb-10'>
         <div className='container py-10 px-4'>
+                  {enrollError && (
+          <p className="text-red-500 text-sm m-2 font-bold">
+            {enrollError}
+          </p>
+      )}
           <div className='w-[80px]'>
             <img className='w-full' src={course.instructorImageUrl} alt="" />
           </div>
