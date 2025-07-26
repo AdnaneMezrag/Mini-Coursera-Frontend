@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://localhost:7124/api', // Development
+  baseURL: 'https://mini-coursera-backend.onrender.com/api', // Development
   withCredentials: true, // Required for HTTP-only cookies (refresh token)
 });
 
@@ -31,7 +31,7 @@ apiClient.interceptors.response.use(
       try {
         // Call refresh token endpoint (HTTP-only cookie sends refresh token automatically)
         const refreshResponse = await axios.post(
-          'https://localhost:7124/api/User/refreshToken',{},
+          'https://mini-coursera-backend.onrender.com/api/User/refreshToken',{},
           { withCredentials: true } // Ensure cookies are sent
         );
 
