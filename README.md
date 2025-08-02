@@ -39,9 +39,9 @@ A modern frontend for MiniCoursera built with React, TypeScript, and Tailwind CS
 2. Install dependencies:
 ```npm install
 # or
-yarn install```
+yarn install
 
 3. Run:
 ```npm run dev
 # or
-yarn dev```
+yarn dev
